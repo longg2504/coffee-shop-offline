@@ -1,8 +1,5 @@
 package com.cg.model;
 
-import com.cg.model.dto.category.CategoryCreResDTO;
-import com.cg.model.dto.category.CategoryDTO;
-import com.cg.model.dto.category.CategoryUpResDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +16,7 @@ import java.util.List;
 @Entity
 @Table(name="categories")
 @Accessors(chain = true)
-public class Category extends BaseEntity {
+public class Category  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,25 +27,4 @@ public class Category extends BaseEntity {
 
     @OneToMany(mappedBy = "category")
     private List<Product> products;
-
-    public CategoryCreResDTO toCategoryCreResDTO() {
-        return new CategoryCreResDTO()
-                .setId(id)
-                .setTitle(title)
-                ;
-    }
-
-    public CategoryUpResDTO toCategoryUpResDTO() {
-        return new CategoryUpResDTO()
-                .setId(id)
-                .setTitle(title)
-                ;
-    }
-
-    public CategoryDTO toCategoryDTO() {
-        return new CategoryDTO()
-                .setId(id)
-                .setTitle(title)
-                ;
-    }
 }
