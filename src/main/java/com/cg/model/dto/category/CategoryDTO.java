@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import lombok.experimental.Accessors;
+=======
+>>>>>>> cd831af (upload)
 =======
 >>>>>>> cd831af (upload)
 
@@ -14,7 +17,10 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 <<<<<<< HEAD
+<<<<<<< HEAD
 @Accessors(chain = true)
+=======
+>>>>>>> cd831af (upload)
 =======
 >>>>>>> cd831af (upload)
 public class CategoryDTO {
