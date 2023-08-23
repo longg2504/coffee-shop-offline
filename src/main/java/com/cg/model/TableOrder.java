@@ -1,11 +1,14 @@
 package com.cg.model;
 
+import com.cg.model.dto.tableOrder.TableOrderCreateResDTO;
+import com.cg.model.dto.tableOrder.TableOrderDTO;
 import com.cg.model.enums.ETableStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 
 
 import javax.persistence.*;
@@ -19,6 +22,7 @@ import javax.persistence.*;
 @Accessors(chain = true)
 public class TableOrder extends BaseEntity{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -26,4 +30,19 @@ public class TableOrder extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private ETableStatus status;
+
+    public TableOrderDTO toTableOrderDTO() {
+        return new TableOrderDTO()
+                .setId(String.valueOf(id))
+                .setTitle(title)
+                .setStatus(status.getValue())
+                ;
+    }
+
+    public TableOrderCreateResDTO toTableOrderCreateResDTO() {
+        return new TableOrderCreateResDTO()
+                .setId(null)
+                .setTitle(title)
+                .setStatus(ETableStatus.EMPTY);
+    }
 }

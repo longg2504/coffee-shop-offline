@@ -68,12 +68,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/",
                         "/api/auth/login",
                         "/api/auth/register",
-                        "/login",
-                        "/logout",
+                        "/login","/login/**",
+                        "/logout","/logout/**",
                         "/api/test"
                 ).permitAll()
                 .antMatchers("/dashboard","/dashboard/**").hasAnyAuthority("ADMIN")
-                .antMatchers("/shop","/shop/**").hasAnyAuthority("USER")
+                .antMatchers("/shop","/shop/**").hasAnyAuthority("STAFF")
                 .antMatchers("/resources/**", "/assets/**").permitAll()
 //                .antMatchers(
 //
