@@ -18,6 +18,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class Category  {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
