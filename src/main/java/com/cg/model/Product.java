@@ -20,6 +20,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class Product extends BaseEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
