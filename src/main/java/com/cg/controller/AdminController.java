@@ -12,8 +12,4 @@ public class AdminController {
     public String showDashboradPage() {
         return "/dashboard/list-product";
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 39e04d2 (upload)
