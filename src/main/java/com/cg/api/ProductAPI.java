@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/products")
-public class ProductAPI {
+public class    ProductAPI {
     @Autowired
     private IProductService productService;
 

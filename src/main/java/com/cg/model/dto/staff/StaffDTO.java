@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 @Accessors(chain = true)
 public class StaffDTO {
-    private Long id;
+    private String id;
     private  String title;
     private String phone;
     private LocationRegion locationRegion;

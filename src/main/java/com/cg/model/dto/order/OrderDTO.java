@@ -1,6 +1,7 @@
 package com.cg.model.dto.order;
-
-import com.cg.model.dto.orderDetail.OrderDetailCreResDTO;
+import com.cg.model.dto.orderDetail.OrderDetailDTO;
+import com.cg.model.dto.staff.StaffDTO;
+import com.cg.model.dto.tableOrder.TableOrderDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,16 +9,18 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
-import java.util.List;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Accessors(chain = true)
-public class OrderCreResDTO {
-    private Long tableId;
+public class OrderDTO {
+    private Long id;
+    private StaffDTO staff;
+    private TableOrderDTO tableOrder;
     private BigDecimal totalAmount;
 
-    private List<OrderDetailCreResDTO> orderDetails;
+    private OrderDetailDTO orderDetailDTO;
+    private Boolean paid;
+
 }
