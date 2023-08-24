@@ -2,6 +2,8 @@ package com.cg.model;
 
 
 
+import com.cg.model.dto.order.OrderResDTO;
+import com.cg.model.dto.orderDetail.OrderDetailDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,7 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -41,4 +44,18 @@ public class Order extends BaseEntity {
 
     private Boolean paid;
 
+    public OrderResDTO toOrderResDTO() {
+        List<OrderDetailDTO> orderDetailDTOS = new ArrayList<>();
+        for(int i=0;i<this.getOrderDetails().size();i++){
+            OrderDetailDTO orderDetailDTO = this.getOrderDetails().get(i).toOrderDetailDTO();
+            orderDetailDTOS.add(orderDetailDTO);
+        }
+        return new OrderResDTO()
+                .setId(id)
+                .setStaff(staff.toStaffDTO())
+                .setTableOrder(tableOrder.toTableOrderDTO())
+                .setOrderDetails(orderDetailDTOS)
+                .setPaid(paid)
+                ;
+    }
 }

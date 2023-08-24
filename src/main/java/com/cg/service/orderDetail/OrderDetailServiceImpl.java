@@ -1,6 +1,7 @@
 package com.cg.service.orderDetail;
 
 import com.cg.model.OrderDetail;
+import com.cg.model.dto.orderDetail.OrderDetailByTableResDTO;
 import com.cg.repository.OrderDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,16 @@ public class OrderDetailServiceImpl implements IOrderDetailService{
     }
 
     @Override
+    public Optional<OrderDetail> findByOrderDetailByIdProductAndIdOrder(Long idProduct, Long idOrder, String note) {
+        return orderDetailRepository.findByProductIdAndOrderIdAndNote(idProduct, idOrder, note);
+    }
+
+    @Override
+    public OrderDetail findByOrderId(Long orderId) {
+        return orderDetailRepository.findByOrderId(orderId);
+    }
+
+    @Override
     public OrderDetail save(OrderDetail orderDetail) {
         return orderDetailRepository.save(orderDetail);
     }
@@ -38,4 +49,11 @@ public class OrderDetailServiceImpl implements IOrderDetailService{
     public void deleteById(Long id) {
 
     }
+
+    @Override
+    public List<OrderDetailByTableResDTO> getOrderDetailByTableResDTO(Long orderId) {
+        return orderDetailRepository.getOrderDetailByTableResDTO(orderId);
+    }
+
+
 }

@@ -1,5 +1,4 @@
 package com.cg.model.dto.order;
-
 import com.cg.model.dto.orderDetail.OrderDetailCreResDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class OrderCreResDTO {
+public class OrderUpResDTO {
     private Long tableId;
     private BigDecimal totalAmount;
 

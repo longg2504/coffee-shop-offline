@@ -10,6 +10,6 @@ public class AdminController {
 
     @GetMapping()
     public String showDashboardPage() {
-        return "/dashboard/list-product";
+        return "dashboard/list-product";
     }
 }

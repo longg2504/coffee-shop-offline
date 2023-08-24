@@ -1,7 +1,11 @@
 package com.cg.service.order;
 
-import com.cg.model.Order;
-import com.cg.model.TableOrder;
+import com.cg.model.*;
+import com.cg.model.dto.order.*;
+import com.cg.model.dto.orderDetail.OrderDetailCreResDTO;
+import com.cg.model.dto.orderDetail.OrderDetailUpResDTO;
+import com.cg.model.enums.ETableStatus;
+import com.cg.repository.OrderDetailRepository;
 import com.cg.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +20,10 @@ public class OrderServiceImpl implements IOrderService{
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
+
     @Override
     public List<Order> findAll() {
         return orderRepository.findAll();
@@ -37,6 +45,21 @@ public class OrderServiceImpl implements IOrderService{
     }
 
     @Override
+    public OrderDetailCreResDTO creOrder(OrderCreReqDTO orderCreReqDTO, TableOrder tableOrder, User user) {
+        return null;
+    }
+
+    @Override
+    public OrderDetailUpResDTO upOrderDetail(OrderUpReqDTO orderUpReqDTO, Order order, Product product, User user) {
+        return null;
+    }
+
+    @Override
+    public OrderUpChangeToTableResDTO changeToTable(OrderUpChangeToTableReqDTO orderUpChangeToTableReqDTO, User user) {
+        return null;
+    }
+
+    @Override
     public Order save(Order order) {
         return orderRepository.save(order);
     }
@@ -49,6 +72,10 @@ public class OrderServiceImpl implements IOrderService{
     @Override
     public void deleteById(Long id) {
 
+    }
+
+    public void deleteOrderDetailById(Long orderDetailId) {
+        orderDetailRepository.deleteById(orderDetailId);
     }
 
 

@@ -1,5 +1,6 @@
 package com.cg.model;
 
+import com.cg.model.dto.orderDetail.OrderDetailDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,4 +42,14 @@ public class OrderDetail extends BaseEntity {
     private String note;
 
 
+    public OrderDetailDTO toOrderDetailDTO() {
+        return new OrderDetailDTO()
+                .setOrderDetailId(id)
+                .setProduct(product.toProductDTO())
+                .setQuantity(String.valueOf(quantity))
+                .setPrice(price)
+                .setAmount(amount)
+                .setNote(note)
+                ;
+    }
 }
