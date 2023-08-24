@@ -1,6 +1,7 @@
 package com.cg.model;
 
 import com.cg.model.dto.category.CategoryCreResDTO;
+import com.cg.model.dto.category.CategoryDTO;
 import com.cg.model.dto.category.CategoryUpResDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,6 +40,13 @@ public class Category extends BaseEntity {
 
     public CategoryUpResDTO toCategoryUpResDTO() {
         return new CategoryUpResDTO()
+                .setId(id)
+                .setTitle(title)
+                ;
+    }
+
+    public CategoryDTO toCategoryDTO() {
+        return new CategoryDTO()
                 .setId(id)
                 .setTitle(title)
                 ;
