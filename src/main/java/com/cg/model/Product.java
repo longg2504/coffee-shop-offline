@@ -1,6 +1,9 @@
 package com.cg.model;
 
 
+import com.cg.model.dto.product.ProductCreResDTO;
+import com.cg.model.dto.product.ProductDTO;
+import com.cg.model.dto.product.ProductUpResDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,4 +45,34 @@ public class Product extends BaseEntity {
     @JoinColumn(name = "product_avatar_id",referencedColumnName = "id" ,  nullable = false)
     private ProductAvatar productAvatar;
 
+    public ProductCreResDTO toProductCreResDTO() {
+        return new ProductCreResDTO()
+                 .setId(id)
+                 .setTitle(title)
+                 .setPrice(price)
+                 .setUnit(unit)
+                 .setCategoryTitle(category.getTitle())
+                 .setAvatar(productAvatar.toProductAvatarResDTO());
+    }
+
+    public ProductDTO toProductDTO() {
+        return new ProductDTO()
+                 .setId(String.valueOf(id))
+                 .setTitle(title)
+                 .setPrice(price)
+                 .setUnit(unit)
+                 .setCategory(category.toCategoryDTO())
+                 .setAvatar(productAvatar.toProductAvatarDTO())
+                 ;
+    }
+
+    public ProductUpResDTO toProductUpResDTO() {
+        return new ProductUpResDTO()
+                 .setId(id)
+                 .setTitle(title)
+                 .setPrice(price)
+                 .setUnit(unit)
+                 .setCategoryTitle(category.getTitle())
+                 .setAvatar(productAvatar.toProductAvatarResDTO());
+    }
 }
