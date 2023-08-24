@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category,Long> {
@@ -17,4 +18,7 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
             "FROM Category AS ca " +
             "WHERE ca.deleted = false ")
     List<CategoryDTO> findAllCategoryDTO();
+
+
+    Optional<Category> findByIdAndDeletedFalse(Long id);
 }

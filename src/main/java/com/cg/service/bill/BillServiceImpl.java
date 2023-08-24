@@ -1,6 +1,7 @@
 package com.cg.service.bill;
 
 import com.cg.model.Bill;
+import com.cg.model.dto.bill.BillDTO;
 import com.cg.repository.BillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,5 +39,10 @@ public class BillServiceImpl implements IBillService{
     @Override
     public void deleteById(Long id) {
 
+    }
+
+    @Override
+    public List<BillDTO> findAllBillDTO() {
+        return billRepository.findAllBillDTO();
     }
 }

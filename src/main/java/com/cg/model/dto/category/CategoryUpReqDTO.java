@@ -17,7 +17,7 @@ import org.springframework.validation.Validator;
 public class CategoryUpReqDTO implements Validator {
 
 
-    private String id;
+
     private String title;
 
     @Override
@@ -42,9 +42,9 @@ public class CategoryUpReqDTO implements Validator {
 
     }
 
-    public Category toCategoryUpreqDTO() {
+    public Category toCategoryUpreqDTO(Long categoryId) {
         return new Category()
-                .setId(Long.valueOf(id))
+                .setId(categoryId)
                 .setTitle(title);
     }
 }

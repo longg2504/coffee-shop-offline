@@ -5,6 +5,7 @@ import com.cg.model.dto.category.*;
 import com.cg.service.IGeneralService;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ICategoryService extends IGeneralService<Category,Long> {
 
@@ -12,7 +13,11 @@ public interface ICategoryService extends IGeneralService<Category,Long> {
 
         List<CategoryDTO> findAllCategoryDTO();
 
-        CategoryUpResDTO updateCategory(CategoryUpReqDTO categoryUpReqDTO);
+        CategoryUpResDTO updateCategory(Long categoryId,CategoryUpReqDTO categoryUpReqDTO);
 
         void deleteByIdTrue(Category category);
+
+        Optional<Category> findByIdAndDeletedFalse(Long id);
+
+
 }

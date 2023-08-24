@@ -55,6 +55,8 @@ public class ProductServiceImpl implements IProductService {
         return productRepository.findById(id);
     }
 
+
+
     @Override
     public Product save(Product product) {
         return productRepository.save(product);
@@ -91,14 +93,14 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public Product update(ProductUpReqDTO productUpReqDTO, Category category) {
+    public Product update(Long id,ProductUpReqDTO productUpReqDTO, Category category) {
         ProductAvatar productAvatar = new ProductAvatar();
         productAvatarRepository.save(productAvatar);
 
         uploadAndSaveProductImage(productUpReqDTO.toProductCreReqDTO(), productAvatar);
 
         Product productUpdate = productUpReqDTO.toProductChangeImage(category);
-        productUpdate.setId(Long.valueOf(productUpReqDTO.getId()));
+        productUpdate.setId(id);
         productUpdate.setProductAvatar(productAvatar);
 
         productRepository.save(productUpdate);
@@ -131,6 +133,11 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public Page<ProductDTO> findAllProductDTOPage(Pageable pageable) {
          return productRepository.findAllProductDTOPage(pageable);
+    }
+
+    @Override
+    public Optional<Product> findByIdAndDeletedFalse(Long id) {
+        return productRepository.findByIdAndDeletedFalse(id);
     }
 
     private void uploadAndSaveProductImage(ProductCreReqDTO productCreReqDTO, ProductAvatar productAvatar) {

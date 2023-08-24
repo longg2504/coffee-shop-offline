@@ -48,14 +48,14 @@ public class ProductAPI {
         }
         Long productId = Long.valueOf(productIdStr);
 
-        Product product = productService.findById(productId).orElseThrow(() -> {
+        Product product = productService.findByIdAndDeletedFalse(productId).orElseThrow(() -> {
             throw new DataInputException("Mã sản phẩm không tồn tại");
         });
         ProductDTO productDTO = product.toProductDTO();
         return new ResponseEntity<>(productDTO, HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> createProduct(@ModelAttribute ProductCreReqDTO productCreReqDTO, BindingResult bindingResult) {
 
         if (!validateUtils.isNumberValid(productCreReqDTO.getCategoryId())) {
@@ -63,7 +63,7 @@ public class ProductAPI {
         }
 
         Long idCategory = Long.parseLong(productCreReqDTO.getCategoryId());
-        Category category = categoryService.findById(idCategory).orElseThrow(() -> {
+        Category category = categoryService.findByIdAndDeletedFalse(idCategory).orElseThrow(() -> {
             throw new DataInputException("Mã danh mục không tồn tại");
         });
 
@@ -78,15 +78,15 @@ public class ProductAPI {
         ProductCreResDTO productCreResDTO = product.toProductCreResDTO();
         return new ResponseEntity<>(productCreResDTO, HttpStatus.CREATED);
     }
-    @PatchMapping
-    public ResponseEntity<?> updateProduct(@ModelAttribute ProductUpReqDTO productUpReqDTO, BindingResult bindingResult){
+    @PatchMapping("/edit/{productId}")
+    public ResponseEntity<?> updateProduct(@PathVariable("productId") String productIdStr,@ModelAttribute ProductUpReqDTO productUpReqDTO, BindingResult bindingResult){
 
-        if (!validateUtils.isNumberValid(productUpReqDTO.getId())) {
+        if (!validateUtils.isNumberValid(productIdStr)) {
              throw new DataInputException("Mã sản phẩm không hợp lệ");
         }
 
-        Long productId = Long.parseLong(productUpReqDTO.getId());
-        Optional<Product> productOptional = productService.findById(productId);
+        Long productId = Long.parseLong(productIdStr);
+        Optional<Product> productOptional = productService.findByIdAndDeletedFalse(productId);
         if (!productOptional.isPresent()) {
             throw new DataInputException("Mã sản phẩm không tồn tại");
         }
@@ -101,7 +101,7 @@ public class ProductAPI {
         }
 
         Long idCategory = Long.parseLong(productUpReqDTO.getCategoryId());
-        Category category = categoryService.findById(idCategory).orElseThrow(() -> {
+        Category category = categoryService.findByIdAndDeletedFalse(idCategory).orElseThrow(() -> {
             throw new DataInputException("Mã danh mục không tồn tại");
         });
 
@@ -113,7 +113,7 @@ public class ProductAPI {
             return new ResponseEntity<>(product.toProductUpResDTO(), HttpStatus.OK);
         }
         else {
-            Product productUpdate = productService.update(productUpReqDTO,category);
+            Product productUpdate = productService.update(productId,productUpReqDTO,category);
             ProductUpResDTO productUpResDTO = productUpdate.toProductUpResDTO();
             return new ResponseEntity<>(productUpResDTO, HttpStatus.OK);
         }
@@ -126,7 +126,7 @@ public class ProductAPI {
         }
         Long productId = Long.parseLong(productIdStr);
 
-        Product product = productService.findById(productId).orElseThrow(() -> {
+        Product product = productService.findByIdAndDeletedFalse(productId).orElseThrow(() -> {
             throw new DataInputException("Mã sản phẩm không tồn tại");
         });
 
@@ -168,7 +168,7 @@ public class ProductAPI {
             throw new DataInputException("Mã danh mục không hợp lệ");
         }
         Long categoryId = Long.parseLong(categoryIdStr);
-        categoryService.findById(categoryId).orElseThrow(() -> {
+        categoryService.findByIdAndDeletedFalse(categoryId).orElseThrow(() -> {
            throw new DataInputException("Mã danh mục không tồn tại");
         });
         keySearch = '%' + keySearch + '%';

@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 @Setter
 @Accessors(chain = true)
 public class ProductUpReqDTO implements Validator {
-    private String id;
+
     private String title;
     private String price;
 

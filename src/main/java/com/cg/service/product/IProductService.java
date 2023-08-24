@@ -11,13 +11,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IProductService extends IGeneralService<Product,Long> {
     Product createProduct(ProductCreReqDTO productCreReqDTO, Category category);
 
     List<ProductDTO> findAllProductDTO();
 
-    Product update(ProductUpReqDTO productUpReqDTO, Category category);
+    Product update(Long productId,ProductUpReqDTO productUpReqDTO, Category category);
 
     void deleteByIdTrue(Product product);
 
@@ -28,4 +29,6 @@ public interface IProductService extends IGeneralService<Product,Long> {
     List<ProductDTO> findAllByCategoryLikeAndAndTitleLike(Long categoryId,String keySearch);
 
     Page<ProductDTO> findAllProductDTOPage(Pageable pageable);
+
+    Optional<Product> findByIdAndDeletedFalse(Long id);
 }
