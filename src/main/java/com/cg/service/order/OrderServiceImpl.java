@@ -35,6 +35,8 @@ public class OrderServiceImpl implements IOrderService{
     public List<Order> findByTableOrderAndPaid(TableOrder tableOrder, Boolean paid) {
         return orderRepository.findByTableOrderAndPaid(tableOrder,paid);
     }
+
+    @Override
     public Order save(Order order) {
         return orderRepository.save(order);
     }
@@ -48,4 +50,6 @@ public class OrderServiceImpl implements IOrderService{
     public void deleteById(Long id) {
 
     }
+
+
 }

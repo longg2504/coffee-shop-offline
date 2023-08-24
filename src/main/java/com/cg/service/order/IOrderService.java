@@ -12,5 +12,8 @@ public interface IOrderService extends IGeneralService<Order,Long> {
     Optional<Order> findByTableId(Long tableId);
 
     List<Order> findByTableOrderAndPaid(TableOrder tableOrder, Boolean paid);
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
 }
