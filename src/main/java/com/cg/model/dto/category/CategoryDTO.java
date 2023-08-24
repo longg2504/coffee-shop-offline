@@ -5,18 +5,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 <<<<<<< HEAD
+<<<<<<< HEAD
 import lombok.experimental.Accessors;
 =======
 >>>>>>> cd831af (upload)
+=======
+>>>>>>> origin/main
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 <<<<<<< HEAD
+<<<<<<< HEAD
 @Accessors(chain = true)
 =======
 >>>>>>> cd831af (upload)
+=======
+>>>>>>> origin/main
 public class CategoryDTO {
 
     private Long id;
