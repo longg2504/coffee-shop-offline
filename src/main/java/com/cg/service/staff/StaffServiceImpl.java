@@ -7,7 +7,10 @@ import com.cg.model.Staff;
 import com.cg.model.StaffAvatar;
 import com.cg.model.User;
 import com.cg.model.dto.locationRegion.LocationRegionCreReqDTO;
+import com.cg.model.dto.locationRegion.LocationRegionUpReqDTO;
 import com.cg.model.dto.staff.StaffCreReqDTO;
+import com.cg.model.dto.staff.StaffDTO;
+import com.cg.model.dto.staff.StaffUpReqDTO;
 import com.cg.repository.LocationRegionRepository;
 import com.cg.repository.StaffAvatarRepository;
 import com.cg.repository.StaffRepository;
@@ -61,6 +64,11 @@ public class StaffServiceImpl implements IStaffService {
         staffRepository.deleteById(id);
     }
 
+    @Override
+    public List<StaffDTO> findAllStaffDTO() {
+        return staffRepository.findAllStaffDTO();
+    }
+
     private void uploadAndSaveStaffImage(StaffCreReqDTO staffCreReqDTO, StaffAvatar staffAvatar) {
         try {
             Map uploadResult = uploadService.uploadImage(staffCreReqDTO.getStaffAvatar(), uploadUtils.buildImageUploadParamsStaff(staffAvatar));
@@ -79,20 +87,26 @@ public class StaffServiceImpl implements IStaffService {
         }
     }
 
+
+
     @Override
     public Staff create(StaffCreReqDTO staffCreReqDTO, User user) {
+
         LocationRegionCreReqDTO locationRegionCreReqDTO = staffCreReqDTO.getLocationRegion();
         LocationRegion locationRegion = locationRegionCreReqDTO.toLocationRegion();
         locationRegionRepository.save(locationRegion);
+
         StaffAvatar staffAvatar = new StaffAvatar();
         staffAvatarRepository.save(staffAvatar);
+
         uploadAndSaveStaffImage(staffCreReqDTO, staffAvatar);
         Staff staff = staffCreReqDTO.toStaff(user);
         staff.setLocationRegion(locationRegion);
         staff.setStaffAvatar(staffAvatar);
-
         staffRepository.save(staff);
+
         return staff;
 
     }
+
 }

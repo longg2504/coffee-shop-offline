@@ -1,6 +1,7 @@
 package com.cg.model;
 
 import com.cg.model.dto.staff.StaffDTO;
+import com.cg.model.dto.staff.StaffUpReqDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -53,14 +54,22 @@ public class Staff extends BaseEntity {
 
     public StaffDTO toStaffDTO() {
         return new StaffDTO()
-                .setId(id)
                 .setTitle(title)
                 .setPhone(phone)
-                .setLocationRegion(locationRegion)
+                .setLocationRegion(locationRegion.toLocationRegionResDTO())
                 .setUser(user)
-                .setOrders(orders)
                 ;
     }
+
+//    public StaffUpReqDTO toStaffUpReqDTO() {
+//        return new StaffUpReqDTO()
+//                .setTitle(title)
+//                .setPhone(phone)
+//                .setLocationRegion(locationRegion.toLocationRegion())
+//                ;
+//
+//
+//    }
 
 
 }

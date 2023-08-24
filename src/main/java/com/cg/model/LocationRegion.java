@@ -1,5 +1,6 @@
 package com.cg.model;
 
+import com.cg.model.dto.locationRegion.LocationRegionCreReqDTO;
 import com.cg.model.dto.locationRegion.LocationRegionCreResDTO;
 import com.cg.model.dto.locationRegion.LocationRegionResDTO;
 import lombok.AllArgsConstructor;
@@ -53,15 +54,26 @@ public class LocationRegion extends BaseEntity {
                 .setWardName(wardName)
                 .setAddress(address);
     }
-
-    public LocationRegionCreResDTO toLocationRegionCreResDTO(){
-        return new LocationRegionCreResDTO()
-                .setProvinceName(provinceName)
-                .setDistrictName(districtName)
-                .setWardName(wardName)
-                .setAddress(address)
-                ;
-    }
-
+//
+//    public LocationRegionCreResDTO toLocationRegionCreResDTO(){
+//        return new LocationRegionCreResDTO()
+//                .setProvinceName(provinceName)
+//                .setDistrictName(districtName)
+//                .setWardName(wardName)
+//                .setAddress(address)
+//                ;
+//    }
+//
+//    public LocationRegionCreReqDTO toLocationRegion() {
+//        return new LocationRegionCreReqDTO()
+//                .setProvinceId(provinceId)
+//                .setProvinceName(provinceName)
+//                .setDistrictId(districtId)
+//                .setDistrictName(districtName)
+//                .setWardId(wardId)
+//                .setWardName(wardName)
+//                .setAddress(address);
+//
+//    }
 }
 

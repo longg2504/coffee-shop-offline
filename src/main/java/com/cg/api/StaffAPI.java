@@ -1,10 +1,13 @@
 package com.cg.api;
 
 import com.cg.exception.DataInputException;
+import com.cg.model.Category;
 import com.cg.model.Staff;
 import com.cg.model.User;
+import com.cg.model.dto.product.ProductCreReqDTO;
 import com.cg.model.dto.staff.StaffCreReqDTO;
 import com.cg.model.dto.staff.StaffDTO;
+import com.cg.model.dto.staff.StaffUpReqDTO;
 import com.cg.service.locationRegion.ILocationRegionService;
 import com.cg.service.staff.IStaffService;
 import com.cg.service.user.IUserService;
@@ -16,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -32,6 +36,13 @@ public class StaffAPI {
     @Autowired
     private ILocationRegionService locationRegionService;
 
+    @GetMapping
+    public ResponseEntity<?> getAllStaff() {
+        List<StaffDTO> staffDTOS = staffService.findAllStaffDTO();
+        return new ResponseEntity<>(staffDTOS, HttpStatus.OK);
+    }
+
+
     @GetMapping("/{staffId}")
     public ResponseEntity<?> getById(@PathVariable Long staffId) {
         Optional<Staff> optionalStaff = staffService.findById(staffId);
@@ -43,19 +54,18 @@ public class StaffAPI {
         return new ResponseEntity<>(staffDTO, HttpStatus.OK);
     }
 
-
-
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<?> create(@ModelAttribute StaffCreReqDTO staffCreReqDTO, BindingResult bindingResult) {
-
-        if (bindingResult.hasFieldErrors()){
+        new ProductCreReqDTO().validate(staffCreReqDTO, bindingResult);
+        if (bindingResult.hasFieldErrors()) {
             return appUtils.mapErrorToResponse(bindingResult);
         }
         User user = userService.findById(Long.valueOf(staffCreReqDTO.getUserId())).orElseThrow(() -> {
             throw new DataInputException("UserId không tồn tại");
         });
-        Staff staff = staffService.create(staffCreReqDTO,user);
+        Staff staff = staffService.create(staffCreReqDTO, user);
         StaffDTO staffCreReqDTO1 = staff.toStaffDTO();
-       return  new ResponseEntity<>(staffCreReqDTO1,HttpStatus.CREATED);
+        return new ResponseEntity<>(staffCreReqDTO1, HttpStatus.CREATED);
     }
+
 }
