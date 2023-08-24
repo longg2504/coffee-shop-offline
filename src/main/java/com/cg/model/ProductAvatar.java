@@ -1,6 +1,7 @@
 package com.cg.model;
 
 
+import com.cg.model.dto.productAvatar.ProductAvatarResDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,4 +41,24 @@ public class ProductAvatar extends BaseEntity {
     @Column(name = "cloud_id")
     private String cloudId;
 
+
+    public ProductAvatarResDTO toProductAvatarResDTO() {
+        return new ProductAvatarResDTO()
+                .setId(id)
+                .setFileName(fileName)
+                .setFileFolder(fileFolder)
+                .setFileUrl(fileUrl)
+                .setCloudId(cloudId)
+                ;
+    }
+
+    public ProductAvatarResDTO toProductAvatarDTO() {
+        return new ProductAvatarResDTO()
+                .setId(id)
+                .setFileName(fileName)
+                .setFileFolder(fileFolder)
+                .setFileUrl(fileUrl)
+                .setCloudId(cloudId)
+                ;
+    }
 }
