@@ -1,10 +1,7 @@
 package com.cg.service.order;
 
 import com.cg.model.Order;
-<<<<<<< HEAD
 import com.cg.model.TableOrder;
-=======
->>>>>>> dd38c27 (upload)
 import com.cg.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +27,6 @@ public class OrderServiceImpl implements IOrderService{
     }
 
     @Override
-<<<<<<< HEAD
     public Optional<Order> findByTableId(Long tableId) {
         return orderRepository.findByTableId(tableId);
     }
@@ -39,10 +35,6 @@ public class OrderServiceImpl implements IOrderService{
     public List<Order> findByTableOrderAndPaid(TableOrder tableOrder, Boolean paid) {
         return orderRepository.findByTableOrderAndPaid(tableOrder,paid);
     }
-
-    @Override
-=======
->>>>>>> dd38c27 (upload)
     public Order save(Order order) {
         return orderRepository.save(order);
     }
@@ -56,9 +48,4 @@ public class OrderServiceImpl implements IOrderService{
     public void deleteById(Long id) {
 
     }
-<<<<<<< HEAD
-
-
-=======
->>>>>>> dd38c27 (upload)
 }
