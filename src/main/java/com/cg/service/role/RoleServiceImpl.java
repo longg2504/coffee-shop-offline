@@ -32,11 +32,11 @@ public class RoleServiceImpl implements IRoleService {
 
     @Override
     public void delete(Role role) {
-
+        roleRepository.delete(role);
     }
 
     @Override
     public void deleteById(Long id) {
-
+        roleRepository.deleteById(id);
     }
 }

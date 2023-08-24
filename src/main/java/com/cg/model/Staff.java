@@ -1,10 +1,13 @@
 package com.cg.model;
 
+import com.cg.model.dto.staff.StaffDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import javax.persistence.*;
 
 import javax.persistence.Entity;
@@ -19,6 +22,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "staffs")
+@Accessors(chain = true)
 public class Staff extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +51,16 @@ public class Staff extends BaseEntity {
     @JsonIgnore
     private List<Order> orders;
 
+    public StaffDTO toStaffDTO() {
+        return new StaffDTO()
+                .setId(id)
+                .setTitle(title)
+                .setPhone(phone)
+                .setLocationRegion(locationRegion)
+                .setUser(user)
+                .setOrders(orders)
+                ;
+    }
 
 
 }

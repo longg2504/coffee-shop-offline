@@ -40,6 +40,4 @@ public class ProductAvatar extends BaseEntity {
     @Column(name = "cloud_id")
     private String cloudId;
 
-
-
 }

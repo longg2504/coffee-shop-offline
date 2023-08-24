@@ -1,9 +1,11 @@
 package com.cg.model;
 
+import com.cg.model.dto.staffAvatar.StaffAvatarResDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -14,6 +16,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "staff_avatar")
+@Accessors(chain = true)
 public class StaffAvatar {
     @Id
     @GeneratedValue(generator = "uuid")

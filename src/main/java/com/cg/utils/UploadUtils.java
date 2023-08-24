@@ -3,6 +3,7 @@ package com.cg.utils;
 import com.cg.exception.DataInputException;
 import com.cg.model.Product;
 import com.cg.model.ProductAvatar;
+import com.cg.model.StaffAvatar;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,21 @@ public class UploadUtils {
                 "resource_type", "image"
         );
     }
+
+
+    public Map buildImageUploadParamsStaff(StaffAvatar staffAvatar) {
+        if (staffAvatar == null || staffAvatar.getId() == null)
+            throw new DataInputException("Không thể upload hình ảnh của nhân viên chưa được lưu");
+
+        String publicId = String.format("%s/%s", IMAGE_UPLOAD_FOLDER, staffAvatar.getId());
+
+        return ObjectUtils.asMap(
+                "public_id", publicId,
+                "overwrite", true,
+                "resource_type", "image"
+        );
+    }
+
 
     public Map buildImageDestroyParams(Product product, String publicId) {
         if (product == null || product.getId() == null)
