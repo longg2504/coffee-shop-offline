@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 =======
 >>>>>>> cd831af (upload)
 =======
->>>>>>> cd831af (upload)
+>>>>>>> origin/main
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 =======
 >>>>>>> cd831af (upload)
 =======
->>>>>>> cd831af (upload)
+>>>>>>> origin/main
 public class CategoryDTO {
 
     private Long id;
