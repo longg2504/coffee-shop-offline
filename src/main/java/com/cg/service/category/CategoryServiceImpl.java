@@ -57,8 +57,8 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    public CategoryUpResDTO updateCategory(CategoryUpReqDTO categoryUpReqDTO) {
-        Category category = categoryUpReqDTO.toCategoryUpreqDTO();
+    public CategoryUpResDTO updateCategory(Long categoryId,CategoryUpReqDTO categoryUpReqDTO) {
+        Category category = categoryUpReqDTO.toCategoryUpreqDTO(categoryId);
         categoryRepository.save(category);
         CategoryUpResDTO categoryUpResDTO = category.toCategoryUpResDTO();
 
@@ -71,4 +71,11 @@ public class CategoryServiceImpl implements ICategoryService {
         category.setDeleted(true);
         categoryRepository.save(category);
     }
+
+    @Override
+    public Optional<Category> findByIdAndDeletedFalse(Long id) {
+        return categoryRepository.findByIdAndDeletedFalse(id);
+    }
+
+
 }
