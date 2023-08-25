@@ -6,7 +6,10 @@ import com.cg.model.dto.staff.StaffDTO;
 import com.cg.service.IGeneralService;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IStaffService extends IGeneralService<Staff,Long> {
     Staff create(StaffCreReqDTO staffCreReqDTO, User user);
+
+    Optional<Staff> findByUserAndDeletedIsFalse(User user);
 }

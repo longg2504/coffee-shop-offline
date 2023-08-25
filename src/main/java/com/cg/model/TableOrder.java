@@ -2,6 +2,7 @@ package com.cg.model;
 
 import com.cg.model.dto.tableOrder.TableOrderCreateResDTO;
 import com.cg.model.dto.tableOrder.TableOrderDTO;
+import com.cg.model.dto.tableOrder.TableOrderResDTO;
 import com.cg.model.enums.ETableStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -44,5 +45,20 @@ public class TableOrder extends BaseEntity{
                 .setId(null)
                 .setTitle(title)
                 .setStatus(ETableStatus.EMPTY);
+    }
+    public TableOrderResDTO toTableOrderResDTO() {
+        return new TableOrderResDTO()
+                .setId(id)
+                .setTitle(title)
+                .setStatus(status)
+                ;
+    }
+
+    public TableOrderResDTO toUpdateTableOrderResDTO(Long tableOrderId) {
+        return new TableOrderResDTO()
+                .setId(tableOrderId)
+                .setTitle(title)
+                .setStatus(ETableStatus.EMPTY)
+                ;
     }
 }
