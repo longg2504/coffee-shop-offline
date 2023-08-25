@@ -649,9 +649,10 @@
             data: JSON.stringify(obj)
         })
             .done((data) => {
+                console.log(data)
                 page.elements.contentItems.empty();
                 tableStatus = 'EMPTY';
-                let totalAmount = data.totalAmount;
+                let totalAmount = 0;
                 let items = data.products;
 
                 $.each(items, (index, item) => {
@@ -660,10 +661,7 @@
                 })
 
                 const tableStr = page.commands.renderTable(data.table);
-                $('#tr_' + currentTableId).replaceWith(tableStr);
-
-
-
+                $('#tr_' + currentTableId).replaceWith(tableStr)
                 $('#totalAmount').text(totalAmount.toLocaleString('vi', {style: 'currency', currency: 'VND'}))
 
                 App.IziToast.showSuccessAlert("Thanh toán thành công");
