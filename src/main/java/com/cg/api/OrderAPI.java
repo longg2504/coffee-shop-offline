@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.Table;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +50,7 @@ public class OrderAPI {
 
     @Autowired
     private IProductService productService;
+
 
 
     @Autowired
@@ -158,16 +160,23 @@ public class OrderAPI {
 
     @DeleteMapping("/delete/{orderDetailId}")
     public ResponseEntity<?> deleteOrder(@PathVariable Long orderDetailId) {
-
-
         OrderDetail orderDetail = orderDetailService.findById(orderDetailId).orElseThrow(() -> {
             throw new DataInputException("Vui lòng kiểm tra lại thông tin");
         });
 
+        Long orderId = orderDetail.getOrder().getId();
+        Long tableId = orderDetail.getOrder().getTableOrder().getId();
+
         orderDetailService.delete(orderDetail);
-
+        List<OrderDetailByTableResDTO> orderDetails = orderDetailService.getOrderDetailByTableResDTO(orderId);
+        if(orderDetails.isEmpty()){
+            Optional<TableOrder> tableOrderOptional = tableOrderService.findById(tableId);
+           TableOrder tableOrder = tableOrderOptional.get();
+           tableOrder.setStatus(ETableStatus.EMPTY);
+           tableOrderService.save(tableOrder);
+           return new ResponseEntity<>(tableOrder,HttpStatus.OK);
+        }
         return new ResponseEntity<>(orderDetail.getOrder().getTableOrder(), HttpStatus.OK);
-
     }
 
     @PatchMapping("/update/change-to-table")

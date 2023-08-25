@@ -2,7 +2,10 @@ package com.cg.model;
 
 
 
+import com.cg.model.dto.order.OrderCreResDTO;
+import com.cg.model.dto.order.OrderDTO;
 import com.cg.model.dto.order.OrderResDTO;
+import com.cg.model.dto.order.OrderUpResDTO;
 import com.cg.model.dto.orderDetail.OrderDetailDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -56,6 +59,25 @@ public class Order extends BaseEntity {
                 .setTableOrder(tableOrder.toTableOrderDTO())
                 .setOrderDetails(orderDetailDTOS)
                 .setPaid(paid)
+                ;
+    }
+
+    public OrderDTO toOrderDTO() {
+        return new OrderDTO()
+                .setId(id)
+                .setTotalAmount(totalAmount)
+                ;
+    }
+
+    public OrderCreResDTO toOrderCreResDTO() {
+        return new OrderCreResDTO()
+                .setTableId(tableOrder.getId())
+                ;
+    }
+
+    public OrderUpResDTO toOrderUpResDTO() {
+        return new OrderUpResDTO()
+                .setTableId(tableOrder.getId())
                 ;
     }
 }

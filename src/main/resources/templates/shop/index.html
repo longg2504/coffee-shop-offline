@@ -136,7 +136,7 @@
             getTableById: App.API_TABLE_ORDER,
             getAllProducts: App.API_PRODUCT,
             getProductById: App.API_PRODUCT,
-            getOrderDetailsByTableId: App.API_ORDER_BY_TABLE_ID,
+            getOrderDetailsByTableId: App.API_ORDER,
             getOrderByTableId: App.API_ORDER_BY_TABLE_ID,
             getProductByName: App.API_PRODUCT_SEARCH_NAME,
             createOrder: App.API_ORDER + '/create',
@@ -203,6 +203,7 @@
     let tableOrder = new TableOrder();
     let category = new Category();
     let currentTable = 0;
+    // let orderDetails = [];
 
     page.commands.renderTable = (tableOrder) => {
 
@@ -247,14 +248,14 @@
 
     page.commands.renderOrderDetail = (obj) => {
         return `
-        <div class="item d-flex" id="div_${obj.orderDetailId}">
+        <div class="item d-flex" id="div_${obj.orderDetailId || obj.id}">
             <div class="image">
                 <img src="${obj.avatar.fileUrl}" style="height: 115px; width: 120px;" alt="">
             </div>
             <div class="item-content" style="margin-left: 10px;">
                 <div class="title-close d-flex justify-content-between">
                     <span>${obj.title}</span>
-                    <button class="btn-delete" data-order-detail-id="${obj.orderDetailId}" data-amount="${obj.amount}">
+                    <button class="btn-delete" data-order-detail-id="${obj.orderDetailId || obj.id}" data-amount="${obj.amount}">
                         <span>X</span>
                     </button>
                 </div>
@@ -364,7 +365,7 @@
     page.commands.getListOrderDetailByTableId = (tableId) => {
         return $.ajax({
             type: 'GET',
-            url: page.url.getOrderDetailsByTableId + '/list-order-details' + tableId
+            url: page.url.getOrderDetailsByTableId + '/list-order-details' + '/' +tableId
         })
             .done((data) => {
                 if (data && data.length > 0) {
@@ -404,9 +405,11 @@
     page.commands.getOrderDetailsByTableId = (tableId) => {
         return $.ajax({
             type: 'GET',
-            url: page.url.getOrderDetailsByTableId + '/' + tableId
+            url: page.url.getOrderByTableId + '/' + tableId
         })
             .done((data) => {
+                // orderDetails = data;
+
                 if (data && data.length > 0) {
                     page.elements.contentItems.empty();
                     page.elements.tbOrderItemsBody.empty();
@@ -501,9 +504,27 @@
             .catch((error) => {
                 console.log(error);
             });
-        // page.dialogs.elements.modalChangToTable.modal('show');
     }
 
+    // page.commands.setOrderDetails = (obj) => {
+    //     let hasData = false;
+    //
+    //     if (orderDetails.length > 0) {
+    //         orderDetails.filter((item) => {
+    //             if (item.orderDetailId === obj.orderDetailId) {
+    //                 item = obj;
+    //                 hasData = true;
+    //             }
+    //         })
+    //
+    //         if (!hasData) {
+    //             orderDetails.push(obj);
+    //         }
+    //     }
+    //     else {
+    //         orderDetails.push(obj);
+    //     }
+    // }
 
     page.commands.doCreateOrder = (currentTableId, productId, quantity, note) => {
         let obj = {
@@ -525,7 +546,6 @@
         })
             .done((data) => {
                 page.elements.contentItems.empty();
-
                 tableStatus = 'BUSY';
 
                 let totalAmount = data.totalAmount;
@@ -541,8 +561,6 @@
                 const tableStr = page.commands.renderTable(newTableOrder);
                 $('#tr_' + currentTableId).replaceWith(tableStr);
 
-                // page.commands.getAllTable(data.tableId)
-                // page.commands.getOrderDetailsByTableId(data.tableId);
                 App.IziToast.showSuccessAlert("Tạo đơn thành công ")
                 page.dialogs.elements.modalProductDetail.modal('hide');
             })
@@ -583,25 +601,19 @@
             .done((data) => {
                 page.elements.contentItems.empty();
 
-                let totalAmount = data.totalAmount;
-                let items = data.products;
+                // page.commands.setOrderDetails(data);
+                const orderDetails = data.products;
 
-                $.each(items, (index, item) => {
+                let totalAmount = data.totalAmount;
+
+                $.each(orderDetails, (index, item) => {
                     const str = page.commands.renderOrderDetail(item);
                     page.elements.contentItems.append(str);
                 })
 
-                // page.elements.boardWaiting.addClass('hide');
-                // page.elements.contentItems.removeClass('hide');
 
                 $('#totalAmount').text(totalAmount.toLocaleString('vi', {style: 'currency', currency: 'VND'}))
 
-                // const newTableOrder = data.table;
-                // const tableStr = page.commands.renderTable(newTableOrder);
-                // $('#tr_' + currentTableId).replaceWith(tableStr);
-
-                // page.commands.getAllTable(data.tableId)
-                // page.commands.getOrderDetailsByTableId(data.tableId);
                 App.IziToast.showSuccessAlert("Thêm món thành công");
                 page.dialogs.elements.modalProductDetail.modal('hide');
             })
@@ -754,14 +766,22 @@
                         type: 'DELETE',
                         url: page.url.deleteProductByOrderDetailId + '/' + orderDetailId
                     })
-                        .done(() => {
-                            console.log();
+                        .done((data) => {
+                            console.log(data)
                             $('#div_' + orderDetailId).remove();
                             let totalAmount = $('#totalAmount').text();
                             totalAmount = totalAmount.replace('₫', '');
                             totalAmount = totalAmount.replace('.', '');
                             const newTotalAmount = totalAmount - amount;
                             $('#totalAmount').text(newTotalAmount.toLocaleString('vi', {style: 'currency', currency: 'VND'}));
+
+                            if (data.status === "EMPTY"){
+                                tableStatus = 'EMPTY'
+                                const table = page.commands.renderTable(data);
+                                $('#tr_' + data.id).replaceWith(table);
+                            }
+
+
                         })
                         .fail((jqXHR) => {
                             console.log(jqXHR);
@@ -769,10 +789,6 @@
                         })
                 }
             })
-
-
-
-
 
         })
 
@@ -805,6 +821,7 @@
         page.elements.tablePannel.on('click', '.showModalTable', function () {
             currentTable = $(this).parent().parent().data('id');
             page.commands.getOrderDetailsByTableId(currentTable).then((data) => {
+
                 if(data !== undefined && data !== null && data.length > 0){
                     page.commands.handAddEventShowChangeToTable(currentTable);
                 }

@@ -47,6 +47,11 @@ public class StaffServiceImpl implements IStaffService {
     }
 
     @Override
+    public Optional<Staff> findByUserAndDeletedIsFalse(User user) {
+        return staffRepository.findByUserAndDeletedIsFalse(user);
+    }
+
+    @Override
     public Staff save(Staff staff) {
         return staffRepository.save(staff);
     }
@@ -95,4 +100,6 @@ public class StaffServiceImpl implements IStaffService {
         return staff;
 
     }
+
+
 }
