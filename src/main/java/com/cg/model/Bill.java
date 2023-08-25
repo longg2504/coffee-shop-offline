@@ -1,5 +1,6 @@
 package com.cg.model;
 
+import com.cg.model.dto.bill.BillCreResDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,4 +31,13 @@ public class Bill extends BaseEntity{
     @JoinColumn(name = "order_id",referencedColumnName = "id",nullable = false)
     private Order order;
 
+    public BillCreResDTO toBillResDTO() {
+        return new BillCreResDTO()
+                .setId(null)
+                .setTable(order.getTableOrder().toTableOrderDTO())
+                .setTotalAmount(order.getTotalAmount())
+                .setPaid(getOrder().getPaid())
+                .setOrderId(getOrder().getId())
+                ;
+    }
 }

@@ -64,7 +64,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "pro.productAvatar" +
             ") " +
             "FROM Product as pro " +
-            "WHERE pro.title like :keySearch and pro.category.id = :categoryId"
+            "WHERE pro.title like :keySearch and pro.category.id = :categoryId " +
+            "ORDER BY pro.price desc"
     )
     List<ProductDTO> findAllByCategoryLikeAndAndTitleLike(@Param("categoryId") Long categoryId,@Param("keySearch") String keySearch);
 
