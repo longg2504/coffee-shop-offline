@@ -11,7 +11,6 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Getter
 @Setter
-
 @Accessors(chain = true)
 public class CategoryDTO {
 
