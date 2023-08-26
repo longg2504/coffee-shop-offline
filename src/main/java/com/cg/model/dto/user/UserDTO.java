@@ -1,5 +1,6 @@
 package com.cg.model.dto.user;
 
+import com.cg.model.User;
 import com.cg.model.dto.role.RoleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,4 +20,13 @@ public class UserDTO {
     private String password;
 
     private RoleDTO role;
+
+
+    public User toUserDTO() {
+        return new User()
+                .setId(id)
+                .setUsername(username)
+                .setPassword(password)
+                .setRole(role.toRoleDTO());
+    }
 }

@@ -1,6 +1,5 @@
 package com.cg.model.dto.locationRegion;
 
-import com.cg.model.LocationRegion;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,16 +26,4 @@ public class LocationRegionCreReqDTO {
 
     private String address;
 
-    public LocationRegion toLocationRegion(){
-        return new LocationRegion()
-                .setId(null)
-                .setProvinceId(provinceId)
-                .setProvinceName(provinceName)
-                .setDistrictId(districtId)
-                .setDistrictName(districtName)
-                .setWardId(wardId)
-                .setWardName(wardName)
-                .setAddress(address)
-                ;
-    }
 }

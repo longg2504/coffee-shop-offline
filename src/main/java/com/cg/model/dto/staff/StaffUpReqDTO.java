@@ -1,5 +1,6 @@
 package com.cg.model.dto.staff;
 
+import com.cg.model.Staff;
 import com.cg.model.dto.locationRegion.LocationRegionUpReqDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class StaffUpReqDTO implements Validator {
+public class StaffUpReqDTO implements Validator{
     private String title;
     private String phone;
     private LocationRegionUpReqDTO locationRegion;
@@ -40,14 +41,25 @@ public class StaffUpReqDTO implements Validator {
             errors.rejectValue("title", "title.length", "Tên không ít hơn 5 kí tự và dài hơn 25 kí tự");
         }
         if (phone.isEmpty()) {
-            errors.rejectValue("title", "title.null", "Tên không được phép rỗng");
-        } else {
-            if (phone.matches("^0\\d{9}$")) {
-                errors.rejectValue("phone", "phone.matches", "Vui lòng nhập số điện thoại bắt đầu ký tự 0(10 số)");
-            }
-
+            errors.rejectValue("title", "title.null", "Số điện thoại không được phép rỗng");
         }
     }
 
+    public Staff toStaffChangeImage() {
+        return new Staff()
+                .setTitle(title)
+                .setPhone(phone)
+                .setLocationRegion(locationRegion.toLocationRegion())
+                ;
+    }
+
+    public Staff toStaffUpReqDTO(Long staffId){
+        return new Staff()
+                .setId(staffId)
+                .setTitle(title)
+                .setPhone(phone)
+                .setLocationRegion(locationRegion.toLocationRegion());
+
+    }
 }
 
