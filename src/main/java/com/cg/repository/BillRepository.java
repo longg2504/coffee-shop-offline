@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 
-public interface BillRepository extends JpaRepository<Bill, Long> {
+public interface BillRepository extends JpaRepository<Bill,Long> {
 
     @Query("SELECT NEW com.cg.model.dto.bill.BillDTO (" +
             "b.id, " +
@@ -28,7 +28,7 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     List<BillDTO> findAllBillDTO();
 
     @Query("select new com.cg.model.dto.bill.BillDetailDTO (" +
-            " b.id, " +
+            "b.id, " +
             "b.totalAmount, " +
             "od.amount, " +
             "od.note, " +

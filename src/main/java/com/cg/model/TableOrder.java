@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 
 
 import javax.persistence.*;

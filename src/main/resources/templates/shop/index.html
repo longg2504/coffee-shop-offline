@@ -304,7 +304,7 @@
                 data.forEach(item => {
                     tableOrder = item;
                     let str = page.commands.renderTable(tableOrder)
-                    page.elements.tablePannel.prepend(str)
+                    page.elements.tablePannel.append(str)
 
                 })
 
@@ -349,7 +349,7 @@
                 data.forEach(item => {
                     product = item;
                     const str = page.commands.renderProduct(product)
-                    page.elements.menuPannel.prepend(str);
+                    page.elements.menuPannel.append(str);
                 })
             })
     }
@@ -660,6 +660,10 @@
                     page.elements.contentItems.append(str);
                 })
 
+                page.elements.boardWaiting.removeClass('hide');
+                page.elements.contentItems.addClass('hide');
+
+
                 const tableStr = page.commands.renderTable(data.table);
                 $('#tr_' + currentTableId).replaceWith(tableStr)
                 $('#totalAmount').text(totalAmount.toLocaleString('vi', {style: 'currency', currency: 'VND'}))
@@ -777,6 +781,8 @@
                                 tableStatus = 'EMPTY'
                                 const table = page.commands.renderTable(data);
                                 $('#tr_' + data.id).replaceWith(table);
+                                page.elements.boardWaiting.removeClass('hide');
+                                page.elements.contentItems.addClass('hide');
                             }
 
 

@@ -1,7 +1,5 @@
 package com.cg.model.dto.bill;
-import com.cg.model.Order;
-import com.cg.model.TableOrder;
-import com.cg.model.dto.order.OrderDTO;
+
 import com.cg.model.dto.tableOrder.TableOrderDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
