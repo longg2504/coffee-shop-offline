@@ -12,8 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-
-public interface BillRepository extends JpaRepository<Bill,Long> {
+public interface BillRepository extends JpaRepository<Bill, Long> {
 
     @Query("SELECT NEW com.cg.model.dto.bill.BillDTO (" +
             "b.id, " +
@@ -21,7 +20,7 @@ public interface BillRepository extends JpaRepository<Bill,Long> {
             "b.order.totalAmount, " +
             "b.createdAt, " +
             "b.order.staff.title, " +
-            "b.order.id" +
+            "b.order.id " +
             ") " +
             "FROM Bill AS b "
     )
@@ -37,11 +36,11 @@ public interface BillRepository extends JpaRepository<Bill,Long> {
             "p.title, " +
             "od.createdAt " +
             ")" +
-            "from Bill as b\n" +
-            "join Order as o on b.id = o.id\n" +
-            "join OrderDetail as od on o.id = od.order.id\n" +
-            "join Product as p on od.product.id = p.id\n" +
-            "where od.order.id = :billId ")
+            "from Bill as b " +
+            "join Order as o on b.order.id = o.id "  +
+            "join OrderDetail as od on o.id = od.order.id " +
+            "join Product as p on od.product.id = p.id " +
+            "where b.id = :billId ")
     List<BillDetailDTO> findBillById(@Param("billId") Long billId);
 
     @Query("SELECT NEW com.cg.model.dto.bill.BillDTO (" +

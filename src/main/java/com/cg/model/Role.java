@@ -2,6 +2,8 @@ package com.cg.model;
 
 import com.cg.model.enums.ERole;
 import lombok.*;
+import lombok.experimental.Accessors;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -12,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "roles")
+@Accessors(chain = true)
 public class Role {
 
     @Id

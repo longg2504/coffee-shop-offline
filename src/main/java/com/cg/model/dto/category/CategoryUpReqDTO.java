@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -14,6 +15,7 @@ import org.springframework.validation.Validator;
 @NoArgsConstructor
 @Getter
 @Setter
+@Accessors(chain = true)
 public class CategoryUpReqDTO implements Validator {
 
 

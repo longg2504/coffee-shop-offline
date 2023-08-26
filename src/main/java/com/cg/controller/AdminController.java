@@ -28,6 +28,7 @@ public class AdminController {
     public ModelAndView showDashboardPage() {
         String userName = appUtils.getPrincipalUsername();
         ModelAndView modelAndView = new ModelAndView();
+        userName = userName.substring(0, userName.indexOf("@"));
         modelAndView.addObject("userName",userName);
         modelAndView.setViewName("dashboard/list-product");
         return modelAndView;
@@ -44,6 +45,7 @@ public class AdminController {
         }
         Role role = userOptional.get().getRole();
         String roleCode = role.getCode();
+        username = username.substring(0, username.indexOf("@"));
 
         model.addAttribute("userName", username);
         model.addAttribute("roleCode", roleCode);
@@ -63,9 +65,28 @@ public class AdminController {
         Role role = userOptional.get().getRole();
         String roleCode = role.getCode();
 
-//        username = username.substring(0, username.indexOf("@"));
+        username = username.substring(0, username.indexOf("@"));
         model.addAttribute("userName", username);
         model.addAttribute("roleCode", roleCode);
         return "dashboard/list-product";
+    }
+
+    @GetMapping("/staff")
+    public String showListCustomer(Model model) {
+        String username = appUtils.getPrincipalUsername();
+
+        Optional<User> userOptional = userService.findByName(username);
+
+        if (!userOptional.isPresent()) {
+            throw new DataInputException("User not valid");
+        }
+
+        Role role = userOptional.get().getRole();
+        String roleCode = role.getCode();
+
+        username = username.substring(0, username.indexOf("@"));
+        model.addAttribute("userName", username);
+        model.addAttribute("roleCode", roleCode);
+        return "dashboard/list-user";
     }
 }

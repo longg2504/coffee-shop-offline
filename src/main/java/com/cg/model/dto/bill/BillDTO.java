@@ -9,7 +9,6 @@ import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -19,8 +18,10 @@ public class BillDTO {
     private Long id;
     private String tableTitle;
     private BigDecimal total;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Date createdAt;
+
     private String staffName;
     private Long orderId;
 

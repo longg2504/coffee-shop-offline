@@ -1,8 +1,10 @@
 package com.cg.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.core.annotation.AliasFor;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
@@ -10,6 +12,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class JwtResponse {
     private Long id;
     private String token;

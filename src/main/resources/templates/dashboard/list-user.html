@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard Coffee</title>
+    <th:block th:replace="/layout/head :: head"></th:block>
+    <link rel="stylesheet" href="/assets/bootstrap/v5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+</head>
+
+<body>
+<div id="wrapper">
+    <th:block th:replace="/layout/topbar :: topbar"></th:block>
+    <th:block th:replace="/layout/left-sidebar :: left-sidebar"></th:block>
+
+    <div class="content-page">
+        <div class="content">
+            <div class="container-fluid">
+                <div class="table-title">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <h1>Danh sách nhân viên</h1>
+                        </div>
+                        <!--            <div class="col-sm-8">-->
+                        <!--              <button type="button" class="btn btn-outline-light create" id="create">-->
+                        <!--                <i class=" fa-solid fa-plus"></i>-->
+                        <!--                Add New User-->
+                        <!--              </button>-->
+                        <!--            </div>-->
+                    </div>
+                </div>
+
+                <!--                <th:block th:replace="/dashboard/modal-create :: modal-create"></th:block>-->
+
+                <div class="row">
+                    <input type="hidden" id="currentRow"/>
+
+                    <table id="tbUser" class="table table-hover ">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Full Name</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <th:block th:replace="/layout/footer :: footer"></th:block>
+</div>
+
+<th:block th:replace="/layout/script :: script"></th:block>
+
+<script src="/assets/jquery/jquery-3.7.0.min.js"></script>
+<script src="/assets/jquery/jquery.validate.js"></script>
+<script src="/assets/bootstrap/v5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/sweetalert2/sweetalert2.all.min.js"></script>
+<script src="/assets/js/magnific-popup-1.1.0.js"></script>
+
+<script src="/assets/js/appBase.js"></script>
+
+<script>
+    const page = {
+        url: {
+            getAllUser: App.API_USERS,
+            getAllRole: App.API_ROLE
+        },
+        elements: {},
+        loadData: {},
+        commands: {},
+        dialogs: {
+            elements: {},
+            commands: {},
+            loadData: {}
+        }
+    }
+    page.elements.tblUserBody = $('#tbUser tbody')
+    page.elements.roleSpan = $('#roleSpan')
+    page.elements.roleSelect = $('#roleSelect')
+
+    page.commands.renderUser = (user) => {
+        return `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.fullName}</td>
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${user.phone}</td>
+                    <td><span id="roleSpan">
+                            ${ user.role.code}
+                        </span>
+                        <select class="form-select" name="role" id="roleSelect" hidden="true">
+                        </select>
+                    </td>
+                </tr>
+            `
+    }
+
+
+    page.commands.getAllUsers = () => {
+        // console.log('data')
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: 'GET',
+            url: page.url.getAllUser
+        })
+            .done((data) => {
+                // console.log(data);
+                $.each(data, (index, item) => {
+                    console.log(item)
+                    const str = page.commands.renderUser(item)
+                    page.elements.tblUserBody.append(str)
+                })
+                page.commands.updateRole();
+            })
+            .fail(function () {
+                App.SweetAlert.showErrorAlert(App.AlertMessageVi.ERROR_404);
+            });
+    }
+
+    page.commands.getRoles = () => {
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: 'GET',
+            url: page.url.getAllRole,
+        })
+            .done((data) => {
+                page.elements.roleSelect.empty();
+                $.each(data, function (index, item) {
+                    page.elements.roleSelect.append($('<option>').val(item.id).text(item.code));
+                })
+            })
+            .fail(function () {
+                App.SweetAlert.showErrorAlert(App.AlertMessageVi.ERROR_404);
+            });
+    }
+
+    page.commands.updateRole = () => {
+        $('.update-role').on('click', () => {
+            page.elements.roleSpan.hide();
+            page.elements.roleSelect.removeAttr('hidden').show()
+            page.commands.getRoles();
+        })
+
+    }
+
+    page.initializeControlEvent = () => {
+    }
+
+    page.loadData = () => {
+        page.commands.getAllUsers();
+    }
+
+    $(() => {
+        page.loadData();
+        page.initializeControlEvent();
+    })
+
+</script>
+
+</body>
+</html>

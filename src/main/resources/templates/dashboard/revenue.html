@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>My Account</title>
+    <title>Admin Dashboard Coffee</title>
     <th:block th:replace="/layout/head :: head"></th:block>
     <link rel="stylesheet" href="/assets/bootstrap/v.5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/styles.css">
@@ -233,7 +233,6 @@
     }
 
     page.commands.renderBillDetail = (obj) => {
-        const imageUrl = App.BASE_URL_CLOUD_IMAGE + '/' + App.IMAGE_SCALE_W_280_h_180_Q_100 + '/' + obj.product.productAvatar.fileFolder + '/' + obj.product.productAvatar.fileName;
         const price = obj.price.toLocaleString('vi', {style: 'currency', currency: 'VND'});
         const amount = obj.amount.toLocaleString('vi', {style: 'currency', currency: 'VND'});
         return `
@@ -242,10 +241,7 @@
                         <span class="product-id">${obj.id}</span>
                     </td>
                     <td>${obj.title}</td>
-                    <td>
-                         <img src="${imageUrl}" class="card-img-top" alt="...">
-                    </td>
-                    <td>${obj.unit}</td>
+                    <td>${obj.createdAt}</td>
                     <td>
                         <span class="price-obj" hidden="true">${obj.price}</span>
                         <span class="price">${price}</span>
