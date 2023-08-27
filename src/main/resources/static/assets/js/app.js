@@ -216,3 +216,37 @@ class Avatar {
 //
 //     $('[data-toggle="tooltip"]').tooltip();
 // });
+
+class LocationRegion {
+    constructor(id, provinceId, provinceName, districtId, districtName, wardId, wardName, address) {
+        this.id = id;
+        this.provinceId = provinceId;
+        this.provinceName = provinceName;
+        this.districtId = districtId;
+        this.districtName = districtName;
+        this.wardId = wardId;
+        this.wardName = wardName;
+        this.address = address;
+    }
+}
+
+class Staff {
+    constructor(id,title,phone,locationRegion,staffAvatar) {
+        this.id=id;
+        this.title=title;
+        this.phone=phone;
+        this.locationRegion=locationRegion;
+        this.staffAvatar=staffAvatar;
+
+    }
+}
+
+class User {
+    constructor(id,userName,passWord,role) {
+        this.id =id;
+        this.userName=userName;
+        this.passWord=passWord;
+        this.role=role;
+
+    }
+}
