@@ -203,10 +203,4 @@ public class OrderServiceImpl implements IOrderService{
     public BigDecimal getOrderTotalAmount(Long orderId) {
         return orderRepository.getOrderTotalAmount(orderId);
     }
-
-    public void deleteOrderDetailById(Long orderDetailId) {
-        orderDetailRepository.deleteById(orderDetailId);
-    }
-
-
 }

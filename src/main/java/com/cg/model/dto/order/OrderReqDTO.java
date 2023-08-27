@@ -37,17 +37,6 @@ public class OrderReqDTO implements Validator {
         String quantityStr = orderReqDTO.orderDetail.getQuantity();
         String note = orderReqDTO.orderDetail.getNote();
         String idProductStr = orderReqDTO.orderDetail.getProduct().getId();
-        String idStaffStr = orderReqDTO.staff.getId();
-
-        if(idStaffStr.isEmpty()){
-            errors.rejectValue("staff.id","staffId.null","Mã nhân viên không được bỏ trống");
-
-        }
-
-        if(!idStaffStr.matches("^-?\\d+$")){
-            errors.rejectValue("staff.id","staffId.string","Mã nhân viên không được nhập chữ");
-        }
-
 
         if(idProductStr.isEmpty()){
             errors.rejectValue("orderDetail.product.id","orderDetail.productId.null","Mã sản phẩm không được bỏ trống");

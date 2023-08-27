@@ -1,5 +1,6 @@
 package com.cg.model;
 
+import com.cg.model.dto.user.UserDTO;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -19,7 +20,7 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true , nullable = false)
     private String username;
 
     @Column(nullable = false)
@@ -28,8 +29,6 @@ public class User extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
-
-
 
 
     @Override
@@ -41,5 +40,6 @@ public class User extends BaseEntity {
                 ", role='" + role + '\'' +
                 '}';
     }
+
 
 }

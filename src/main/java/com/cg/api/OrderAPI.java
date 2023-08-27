@@ -46,12 +46,7 @@ public class OrderAPI {
     private IUserService userService;
 
     @Autowired
-    private IStaffService staffService;
-
-    @Autowired
     private IProductService productService;
-
-
 
     @Autowired
     private AppUtils appUtils;

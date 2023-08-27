@@ -21,12 +21,12 @@
                         <div class="col-sm-4">
                             <h1>Danh sách nhân viên</h1>
                         </div>
-                        <!--            <div class="col-sm-8">-->
-                        <!--              <button type="button" class="btn btn-outline-light create" id="create">-->
-                        <!--                <i class=" fa-solid fa-plus"></i>-->
-                        <!--                Add New User-->
-                        <!--              </button>-->
-                        <!--            </div>-->
+                        <div class="col-sm-8">
+                            <button type="button" class="btn btn-outline-light" id="btnShowModalCreate">
+                                <i class=" fa-solid fa-plus"></i>
+                                Thêm nhân viên
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -39,11 +39,15 @@
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>Full Name</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Role</th>
+                            <th>Ảnh</th>
+                            <th>Họ tên</th>
+                            <th>Số điện thoại</th>
+                            <th>Province</th>
+                            <th>District</th>
+                            <th>Ward</th>
+                            <th>Address</th>
+                            <th>Vai trò</th>
+                            <th colspan="2">Action</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -57,19 +61,20 @@
 </div>
 
 <th:block th:replace="/layout/script :: script"></th:block>
+<th:block th:replace="/dashboard/modalCreateStaff "></th:block>
 
 <script src="/assets/jquery/jquery-3.7.0.min.js"></script>
 <script src="/assets/jquery/jquery.validate.js"></script>
-<script src="/assets/bootstrap/v5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/bootstrap/v.5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/sweetalert2/sweetalert2.all.min.js"></script>
 <script src="/assets/js/magnific-popup-1.1.0.js"></script>
+<script src="/assets/js/app.js"></script>
 
-<script src="/assets/js/appBase.js"></script>
 
 <script>
     const page = {
         url: {
-            getAllUser: App.API_USERS,
+            getAllUser: App.API_STAFF,
             getAllRole: App.API_ROLE
         },
         elements: {},
@@ -85,19 +90,46 @@
     page.elements.roleSpan = $('#roleSpan')
     page.elements.roleSelect = $('#roleSelect')
 
-    page.commands.renderUser = (user) => {
+    page.elements.btnShowModalCreate = $('#btnShowModalCreate');
+    page.elements.modalCreate = $('#modalCreate');
+    page.elements.fullNameCre = $('#fullNameCre');
+    page.elements.emailCre = $('#emailCre');
+    page.elements.phoneCre = $('#phoneCre');
+    page.elements.balanceCre = $('#balanceCre');
+    page.elements.provinceCre = $('#provinceCre');
+    page.elements.districtCre = $('#districtCre');
+    page.elements.wardCre = $('#wardCre');
+    page.elements.addressCre = $('#addressCre');
+    page.elements.btnCreate = $('#btnCreate');
+
+    page.commands.renderUser = (staff) => {
+        let imageThumbnail = App.BASE_URL_CLOUD_IMAGE + "/" + App.BASE_SCALE_IMAGE + "/" + staff.staffAvatar.fileFolder + "/" + staff.staffAvatar.fileName;
         return `
                 <tr>
-                    <td>${user.id}</td>
-                    <td>${user.fullName}</td>
-                    <td>${user.username}</td>
-                    <td>${user.email}</td>
-                    <td>${user.phone}</td>
+                    <td>${staff.id}</td>
+                    <td><img src="${imageThumbnail}" alt="" /></td>
+                    <td>${staff.title}</td>
+                    <td>${staff.phone}</td>
+                    <td>${staff.locationRegion.provinceName}</td>
+                    <td>${staff.locationRegion.districtName}</td>
+                    <td>${staff.locationRegion.wardName}</td>
+                    <td>${staff.locationRegion.address}</td>
                     <td><span id="roleSpan">
-                            ${ user.role.code}
+                            ${staff.user.role.code}
                         </span>
                         <select class="form-select" name="role" id="roleSelect" hidden="true">
                         </select>
+                    </td>
+
+                    <td>
+                        <button class="btn btn-outline-secondary">
+                            <i class="fas fa-user-edit"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-danger">
+                            <i class="fas fa-user-slash"></i>
+                        </button>
                     </td>
                 </tr>
             `
@@ -115,49 +147,52 @@
             url: page.url.getAllUser
         })
             .done((data) => {
-                // console.log(data);
+                console.log(data);
                 $.each(data, (index, item) => {
                     console.log(item)
                     const str = page.commands.renderUser(item)
                     page.elements.tblUserBody.append(str)
                 })
-                page.commands.updateRole();
+                // page.commands.updateRole();
             })
             .fail(function () {
                 App.SweetAlert.showErrorAlert(App.AlertMessageVi.ERROR_404);
             });
     }
 
-    page.commands.getRoles = () => {
-        $.ajax({
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            type: 'GET',
-            url: page.url.getAllRole,
-        })
-            .done((data) => {
-                page.elements.roleSelect.empty();
-                $.each(data, function (index, item) {
-                    page.elements.roleSelect.append($('<option>').val(item.id).text(item.code));
-                })
-            })
-            .fail(function () {
-                App.SweetAlert.showErrorAlert(App.AlertMessageVi.ERROR_404);
-            });
-    }
+    // page.commands.getRoles = () => {
+    //     $.ajax({
+    //         headers: {
+    //             'Accept': 'application/json',
+    //             'Content-Type': 'application/json'
+    //         },
+    //         type: 'GET',
+    //         url: page.url.getAllRole,
+    //     })
+    //         .done((data) => {
+    //             page.elements.roleSelect.empty();
+    //             $.each(data, function (index, item) {
+    //                 page.elements.roleSelect.append($('<option>').val(item.id).text(item.code));
+    //             })
+    //         })
+    //         .fail(function () {
+    //             App.SweetAlert.showErrorAlert(App.AlertMessageVi.ERROR_404);
+    //         });
+    // }
 
-    page.commands.updateRole = () => {
-        $('.update-role').on('click', () => {
-            page.elements.roleSpan.hide();
-            page.elements.roleSelect.removeAttr('hidden').show()
-            page.commands.getRoles();
-        })
-
-    }
+    // page.commands.updateRole = () => {
+    //     $('.update-role').on('click', () => {
+    //         page.elements.roleSpan.hide();
+    //         page.elements.roleSelect.removeAttr('hidden').show()
+    //         page.commands.getRoles();
+    //     })
+    //
+    // }
 
     page.initializeControlEvent = () => {
+        page.elements.btnShowModalCreate.on('click', () => {
+            page.elements.modalCreate.modal('show');
+        })
     }
 
     page.loadData = () => {

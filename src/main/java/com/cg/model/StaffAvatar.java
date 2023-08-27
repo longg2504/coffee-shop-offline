@@ -41,5 +41,17 @@ public class StaffAvatar {
     private Integer height;
 
 
+    public StaffAvatarResDTO toStaffAvatarResDTO(){
+        return new StaffAvatarResDTO()
+                .setId(id)
+                .setFileName(fileName)
+                .setFileFolder(fileFolder)
+                .setFileUrl(fileUrl)
+                .setFileType(fileType)
+                .setCloudId(cloudId)
+                ;
+    }
+
+
 }
 

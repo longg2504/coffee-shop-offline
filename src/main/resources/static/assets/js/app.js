@@ -25,10 +25,13 @@ class App {
     static API_UPDATE_USER = this.API_USERS + '/update'
     static API_ROLE = this.API_USERS + '/roles'
 
+    static API_STAFF = this.API_SERVER + '/staff'
+
     static BASE_URL_CLOUD_IMAGE ="https://res.cloudinary.com/dadtniwa8/image/upload";
     static IMAGE_SCALE_W_280_h_180_Q_100 = 'c_scale,w_280,h_180,q_100'
     static IMAGE_SCALE_W_250_h_200_Q_90 = 'c_scale,w_250,h_2000,q_90'
     static IMAGE_SCALE_W_100_h_80_Q_90 = 'c_scale,w_100,h_80,q_90'
+    static BASE_SCALE_IMAGE = "c_limit,w_50,h_50,q_100";
 
 
     static AlertMessageEn = class {

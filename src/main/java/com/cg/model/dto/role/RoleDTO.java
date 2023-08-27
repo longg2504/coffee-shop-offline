@@ -1,5 +1,6 @@
 package com.cg.model.dto.role;
 
+import com.cg.model.Role;
 import com.cg.model.enums.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,5 +18,12 @@ public class RoleDTO {
     private String code;
 
     private ERole name;
+
+    public Role toRoleDTO() {
+        return new Role()
+                .setId(id)
+                .setCode(code)
+                .setName(name);
+    }
 
 }

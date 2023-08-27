@@ -1,6 +1,7 @@
 package com.cg.model;
 
 import com.cg.model.dto.staff.StaffDTO;
+import com.cg.model.dto.staff.StaffUpResDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,7 +35,7 @@ public class Staff extends BaseEntity {
     @Column
     private String phone;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "location_region_id", referencedColumnName = "id", nullable = false)
     private LocationRegion locationRegion;
 
@@ -53,12 +54,21 @@ public class Staff extends BaseEntity {
 
     public StaffDTO toStaffDTO() {
         return new StaffDTO()
-                .setId(String.valueOf(id))
+                .setId(id)
                 .setTitle(title)
                 .setPhone(phone)
-                .setLocationRegion(locationRegion)
+                .setLocationRegion(locationRegion.toLocationRegionResDTO())
                 .setUser(user)
-                .setOrders(orders)
+                ;
+    }
+
+    public StaffUpResDTO toStaffUpResDTO() {
+        return new StaffUpResDTO()
+                .setId(id)
+                .setTitle(title)
+                .setPhone(phone)
+                .setLocationRegion(locationRegion.toLocationRegionUpResDTO())
+                .setStaffAvatar(staffAvatar)
                 ;
     }
 
