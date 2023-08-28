@@ -205,6 +205,8 @@ public class OrderAPI {
         OrderUpChangeToTableResDTO orderUpChangeToTableResDTO = orderService.changeToTable(orderUpChangeToTableReqDTO, userOptional.get());
 
         return new ResponseEntity<>(orderUpChangeToTableResDTO, HttpStatus.OK);
-
     }
+
+
+
 }

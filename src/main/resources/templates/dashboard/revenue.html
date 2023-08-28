@@ -106,7 +106,7 @@
 
 <body>
 <div id="wrapper">
-    <th:block th:replace="/layout/topbar :: topbar"></th:block>
+    <th:block th:replace="/layout/topbar :: topbarBill"></th:block>
     <th:block th:replace="/layout/left-sidebar :: left-sidebar"></th:block>
     <th:block th:replace="/dashboard/modal-bill-detail :: modal-bill-detail"></th:block>
 
@@ -162,6 +162,7 @@
         urls: {
             getAllBills: App.API_BILL,
             getAllBillDetailsByBill : App.API_BILL,
+            getSearchBillDay: App.API_BILL + "/search/day"
 
         },
         elements: {},
@@ -180,6 +181,8 @@
     page.dialogs.elements.tbBillDtail = $('#tbBillDetail tbody')
     page.dialogs.elements.btnCloseMdBillDetail = $('#btnCloseMdBillDetail')
     page.elements.totalAmountRevenue = $('#totalAmountRevenue')
+
+    page.dialogs.elements.searchBill = $('#searchBill')
 
 
     page.commands.getAllBills = () => {
@@ -222,6 +225,15 @@
             </td>
         </tr>
     `;
+    }
+
+    page.commands.searchBill = () =>{
+        let searchBill =page.dialogs.elements.searchBill.val();
+        page.commands.renderRevenue.empty();
+        $.ajax({
+            type:'GET',
+            url: page.url.getSearchBillDay + searchBill
+        })
     }
 
 

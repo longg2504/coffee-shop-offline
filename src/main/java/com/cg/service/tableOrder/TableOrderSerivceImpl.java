@@ -1,9 +1,13 @@
 package com.cg.service.tableOrder;
 
+import com.cg.exception.DataInputException;
+import com.cg.model.Order;
 import com.cg.model.TableOrder;
 import com.cg.model.dto.tableOrder.TableOrderCreateReqDTO;
 import com.cg.model.dto.tableOrder.TableOrderCreateResDTO;
 import com.cg.model.dto.tableOrder.TableOrderDTO;
+import com.cg.model.enums.ETableStatus;
+import com.cg.repository.OrderRepository;
 import com.cg.repository.TableOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,10 @@ public class TableOrderSerivceImpl implements ITableOrderService{
 
     @Autowired
     private TableOrderRepository tableOrderRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
     @Override
     public List<TableOrder> findAll() {
         return tableOrderRepository.findAll();
@@ -47,6 +55,8 @@ public class TableOrderSerivceImpl implements ITableOrderService{
         tableOrderCreateResDTO.setId(tableOrder.getId());
         return tableOrderCreateResDTO;
     }
+
+
 
     @Override
     public void delete(TableOrder tableOrder) {

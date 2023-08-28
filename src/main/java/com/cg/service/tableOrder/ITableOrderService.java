@@ -12,4 +12,6 @@ public interface ITableOrderService extends IGeneralService<TableOrder,Long> {
     List<TableOrderDTO> findAllTableOrderDTO();
 
     TableOrderCreateResDTO createTableOrder(TableOrderCreateReqDTO tableOrderReqDTO);
+
+
 }

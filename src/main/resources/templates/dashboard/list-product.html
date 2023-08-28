@@ -18,7 +18,7 @@
 
 <body>
 <div id="wrapper">
-    <th:block th:replace="/layout/topbar :: topbar"></th:block>
+    <th:block th:replace="/layout/topbar :: topbarProduct"></th:block>
     <th:block th:replace="/layout/left-sidebar :: left-sidebar"></th:block>
 
     <th:block th:replace="/dashboard/frm_list_table :: frm_list_table"/>
@@ -164,6 +164,9 @@
     page.dialogs.elements.divImagePreviewUpdate = $("#mdUpdate div.image-preview, #mdUpdate div.file-name");
     page.dialogs.elements.btnClearImagePreview = $(".clear-image-preview i");
 
+    page.dialogs.elements.searcheProduct = $('#searchProduct')
+    page.dialogs.elements.btnSearchProduct= $('#btnSearchProduct')
+
 
     // page.elements.btnDelete = $("#tempProduct body");
     let productId = 0;
@@ -189,6 +192,8 @@
 
         $('#tr_' + productId).replaceWith($(tempProduct(product.id, product.title, price, product.unit,  product.categoryTitle, imageFileUrl, image_thumbnail, aClass)));
     }
+
+
 
 
 
@@ -551,6 +556,30 @@
     //     $('#loading').remove();
     // }
 
+    page.commands.getSearchProduct = () => {
+        let searchProduct =page.dialogs.elements.searcheProduct.val();
+         page.elements.frmListProduct.empty();
+        if (searchProduct == "") {
+            page.commands.getAllProduct(1,10);
+        } else {
+            $.ajax({
+                type: 'GET',
+                url: page.url.getProductByName + "/" + searchProduct
+            })
+                .done((data) => {
+
+                    data.forEach(item => {
+                        product = new Product(item.id, item.title, item.price, item.unit,item.category.title);
+                        avatar = item.avatar;
+                        price = product.price.toLocaleString('vi', {style: 'currency', currency: 'VND'});
+                        page.commands.addRow(price);
+                    })
+                    page.commands.displayPagination(data.totalPages, data.number + 1);
+                })
+        }
+
+    }
+
 
     page.dialogs.elements.clearImagePreview = () => {
         page.dialogs.elements.imageFileCreate.val("");
@@ -736,6 +765,10 @@
         });
 
         page.commands.handleImagePopup();
+
+        page.dialogs.elements.btnSearchProduct.on('click', function () {
+            page.commands.getSearchProduct();
+        })
 
     }
 
