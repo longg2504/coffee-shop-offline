@@ -108,6 +108,16 @@
             <artifactId>cloudinary-http44</artifactId>
             <version>1.27.0</version>
         </dependency>
+        <dependency>
+            <groupId>net.officefloor.tutorial</groupId>
+            <artifactId>GwtService</artifactId>
+            <version>2.16.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.officefloor.tutorial</groupId>
+            <artifactId>GwtService</artifactId>
+            <version>2.16.0</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -37,8 +37,8 @@ public class StaffUpReqDTO implements Validator{
             errors.rejectValue("title", "title.null", "Tên không được phép rỗng");
             return;
         }
-        if (title.length() >= 25 || title.length() <= 5) {
-            errors.rejectValue("title", "title.length", "Tên không ít hơn 5 kí tự và dài hơn 25 kí tự");
+        if (title.length() >= 50 || title.length() <= 5) {
+            errors.rejectValue("title", "title.length", "Tên không ít hơn 5 kí tự và dài hơn 50 kí tự");
         }
         if (phone.isEmpty()) {
             errors.rejectValue("title", "title.null", "Số điện thoại không được phép rỗng");

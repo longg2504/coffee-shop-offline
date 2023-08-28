@@ -71,6 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/login","/login/**",
                         "/logout","/logout/**",
                         "/api/test"
+
                 ).permitAll()
                 .antMatchers("/dashboard","/dashboard/**").hasAnyAuthority("ADMIN")
                 .antMatchers("/shop","/shop/**").hasAnyAuthority("STAFF")

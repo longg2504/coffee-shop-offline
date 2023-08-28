@@ -1,6 +1,5 @@
 package com.cg.service.staff;
 import com.cg.model.Staff;
-import com.cg.model.User;
 import com.cg.model.dto.staff.StaffCreReqDTO;
 import com.cg.model.dto.staff.StaffDTO;
 import com.cg.model.dto.staff.StaffUpReqDTO;
@@ -21,5 +20,5 @@ public interface IStaffService extends IGeneralService<Staff,Long> {
     List<StaffDTO> findStaffByTitle(String keySearch);
     Page<StaffDTO> findAllStaffDTOPage(Pageable pageable);
 
-    Staff update(StaffUpReqDTO staffUpReqDTO);
+    Staff update(StaffUpReqDTO staffUpReqDTO,Long staffId);
 }

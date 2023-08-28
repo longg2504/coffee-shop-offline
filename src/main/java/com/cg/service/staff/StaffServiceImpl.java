@@ -159,11 +159,12 @@ public class StaffServiceImpl implements IStaffService {
     }
 
     @Override
-    public Staff update(StaffUpReqDTO staffUpReqDTO) {
+    public Staff update(StaffUpReqDTO staffUpReqDTO, Long staffId) {
         MultipartFile file = staffUpReqDTO.getStaffAvatar();
-
+        Optional<Staff> staffOptional = staffService.findById(staffId);
+        Long locationRegionId = staffOptional.get().getLocationRegion().getId();
         LocationRegionUpReqDTO locationRegionUpReqDTO = staffUpReqDTO.getLocationRegion();
-        LocationRegion locationRegion = locationRegionUpReqDTO.toLocationRegion();
+        LocationRegion locationRegion = locationRegionUpReqDTO.toLocationRegionUp(locationRegionId);
         locationRegionRepository.save(locationRegion);
 
         StaffAvatar staffAvatar = new StaffAvatar();
@@ -172,9 +173,11 @@ public class StaffServiceImpl implements IStaffService {
         uploadAndSaveStaffImage( staffAvatar,file);
 
         Staff staffUpdate = staffUpReqDTO.toStaffChangeImage();
-        staffUpdate.setId(staffUpdate.getId());
 
+        staffUpdate.setId(staffId);
         staffUpdate.setStaffAvatar(staffAvatar);
+        staffUpdate.setLocationRegion(locationRegion);
+        staffUpdate.setUser(staffOptional.get().getUser());
 
         staffRepository.save(staffUpdate);
 
