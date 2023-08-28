@@ -39,7 +39,7 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
             ")" +
             "from Bill as b " +
             "join Order as o on b.order.id = o.id "  +
-            "join OrderDetail as od on o.id = b.order.id " +
+            "join OrderDetail as od on od.order.id = o.id " +
             "join Product as p on od.product.id = p.id " +
             "where b.id = :billId ")
     List<BillDetailDTO> findBillById(@Param("billId") Long billId);
