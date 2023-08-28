@@ -114,8 +114,28 @@
         <div class="content">
             <div class="container-fluid">
                 <div class="table-title">
+                    <div>
                     <div class="row">
                         <h1>Hoá Đơn</h1>
+                    </div>
+                        <div>
+                            <label for="day">Ngày:</label>
+                            <select id="day" name="day">
+                            </select>
+
+                            <label for="month">Tháng:</label>
+                            <select id="month" name="month">
+                            </select>
+
+                            <label for="year">Năm:</label>
+                            <select id="year" name="year">
+                            </select>
+
+                                <button class="btn btn-search" type="button" id="btnSearchDay">
+                                    <i class="fa-solid fa-magnifying-glass">search</i>
+                                </button>
+
+                        </div>
                     </div>
                     <div class="row revenue">
                         <table id="tbRevenue" class="table table-hover ">
@@ -162,7 +182,7 @@
         urls: {
             getAllBills: App.API_BILL,
             getAllBillDetailsByBill : App.API_BILL,
-            getSearchBillDay: App.API_BILL + "/search/day"
+            getSearchBillDay: App.API_BILL + "/date"
 
         },
         elements: {},
@@ -182,7 +202,10 @@
     page.dialogs.elements.btnCloseMdBillDetail = $('#btnCloseMdBillDetail')
     page.elements.totalAmountRevenue = $('#totalAmountRevenue')
 
-    page.dialogs.elements.searchBill = $('#searchBill')
+    page.dialogs.elements.day = $('#day')
+    page.dialogs.elements.month = $('#month')
+    page.dialogs.elements.year = $('#year')
+    page.dialogs.elements.btnSearchDay =$('#btnSearchDay')
 
 
     page.commands.getAllBills = () => {
@@ -228,12 +251,25 @@
     }
 
     page.commands.searchBill = () =>{
-        let searchBill =page.dialogs.elements.searchBill.val();
-        page.commands.renderRevenue.empty();
+        let day =page.dialogs.elements.day.val();
+        let month =page.dialogs.elements.month.val();
+        let year =page.dialogs.elements.year.val();
+        page.elements.tbRevenue.empty()
         $.ajax({
             type:'GET',
-            url: page.url.getSearchBillDay + searchBill
+            url: page.urls.getSearchBillDay +'?year='  + year +'&month=' + month +'&day=' +day
         })
+            .done((data) => {
+                let totalAmount = 0;
+                data.forEach(item => {
+                    totalAmount = totalAmount + item.total;
+                    const str = page.commands.renderRevenue(item);
+                    page.elements.tbRevenue.prepend(str)
+
+
+                })
+                page.elements.totalAmountRevenue.text(totalAmount.toLocaleString('vi', {style: 'currency', currency: 'VND'}));
+            })
     }
 
 
@@ -289,6 +325,40 @@
             page.dialogs.elements.tbBillDtail.empty()
         })
     }
+    const daySelect = document.getElementById("day");
+    const monthSelect = document.getElementById("month");
+    const yearSelect = document.getElementById("year");
+
+    // Tạo các tùy chọn cho ngày
+    for (let i = 0; i <= 31; i++) {
+        const option = document.createElement("option");
+        if (i === 0) {
+            option.value = "";
+            option.textContent = "--";
+            daySelect.appendChild(option);
+            continue;
+        }
+        option.value = i < 10 ? "0" + i : "" + i;
+        option.textContent = i;
+        daySelect.appendChild(option);
+    }
+
+    // Tạo các tùy chọn cho tháng
+    for (let i = 1; i <= 12; i++) {
+        const option = document.createElement("option");
+        option.value = i < 10 ? "0" + i : "" + i;
+        option.textContent = i;
+        monthSelect.appendChild(option);
+    }
+
+    // Tạo các tùy chọn cho năm
+    const currentYear = new Date().getFullYear();
+    for (let i = currentYear; i >= currentYear - 10; i--) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = i;
+        yearSelect.appendChild(option);
+    }
 
 
 
@@ -299,6 +369,11 @@
     }
 
     page.initializeControlEvent = () => {
+
+
+        page.dialogs.elements.btnSearchDay.on('click', function () {
+            page.commands.searchBill();
+        })
 
     }
 

@@ -98,7 +98,7 @@ public class BillAPI {
     }
 
 
-    @GetMapping("date")
+    @GetMapping("/date")
     public ResponseEntity<?> getCaiChiDo(@RequestParam(required = false) Integer day, @RequestParam Integer month, @RequestParam Integer year){
         return new ResponseEntity<>(billService.getBillByDate(year,month,day),HttpStatus.CREATED);
     }
