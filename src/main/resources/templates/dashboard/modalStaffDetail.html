@@ -1,69 +1,68 @@
-<th:block th:fragment="modalCreateStaff">
-    <div class="modal fade" id="modalCreate" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
+<th:block th:fragment="modalStaffDetail">
+    <div class="modal fade" id="modalStaffDetail" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
          data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal create staff</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal Detail Staff</h1>
                     <button type="button" class="btn-close btnClose" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <!--                    <div class="error-area"></div>-->
-                    <div class="modal-alert-danger hide">
+                        <div class="modal-alert-danger hide">
                     </div>
-                    <form method="post" id="formCreate" enctype="multipart/form-data">
+                    <form method="post" id="formDetail" enctype="multipart/form-data">
                         <div class="container">
                             <div class="row mb-3">
                                 <div class="col-6">
                                     <div class="row">
                                         <div class="col-lg-6 form-group">
-                                            <label for="titleCre" class="form-label">Title</label>
-                                            <input type="text" class="form-control" id="titleCre" name="titleCre">
+                                            <label for="titleDe" class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="titleDe" name="titleDe" readonly>
                                             <div class="form-message"></div>
                                         </div>
                                         <div class="col-lg-6 form-group">
-                                            <label for="phoneCre" class="form-label">Phone</label>
-                                            <input type="text" class="form-control" id="phoneCre" name="phoneCre">
-                                            <div class="form-message"></div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-6 form-group">
-                                            <label for="provinceCre">Province</label>
-                                            <select class="form-select" name="provinceCre" id="provinceCre"></select>
-                                            <div class="form-message"></div>
-                                        </div>
-                                        <div class="col-lg-6 form-group">
-                                            <label for="districtCre">District</label>
-                                            <select class="form-select" name="districtCre" id="districtCre"></select>
+                                            <label for="phoneDe" class="form-label">Phone</label>
+                                            <input type="text" class="form-control" id="phoneDe" name="phoneDe" readonly>
                                             <div class="form-message"></div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-6 form-group">
-                                            <label for="wardCre">Ward</label>
-                                            <select class="form-select" name="wardCre" id="wardCre"></select>
+                                            <label for="provinceDe">Province</label>
+                                            <select class="form-select" name="provinceDe" id="provinceDe" readonly=""></select>
                                             <div class="form-message"></div>
                                         </div>
                                         <div class="col-lg-6 form-group">
-                                            <label for="addressCre" class="form-label">Address</label>
-                                            <input type="text" class="form-control" id="addressCre" name="addressCre">
+                                            <label for="districtDe">District</label>
+                                            <select class="form-select" name="districtDe" id="districtDe" readonly=""></select>
                                             <div class="form-message"></div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-6 form-group">
-                                            <label for="userNameCre" class="form-label">User Name</label>
-                                            <input type="text" class="form-control" id="userNameCre" name="userNameCre">
+                                            <label for="wardDe">Ward</label>
+                                            <select class="form-select" name="wardDe" id="wardDe" readonly=""></select>
                                             <div class="form-message"></div>
                                         </div>
                                         <div class="col-lg-6 form-group">
-                                            <label for="passWordCre" class="form-label">Password</label>
-                                            <input type="text" class="form-control" id="passWordCre" name="passWordCre">
+                                            <label for="addressDe" class="form-label">Address</label>
+                                            <input type="text" class="form-control" id="addressDe" name="addressDe" readonly>
+                                            <div class="form-message"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 form-group">
+                                            <label for="userNameDe" class="form-label">User Name</label>
+                                            <input type="text" class="form-control" id="userNameDe" name="userNameDe" readonly>
                                             <div class="form-message"></div>
                                         </div>
                                         <div class="col-lg-6 form-group">
-                                            <select class="form-select" name="roleCre" id="roleCre">
+                                            <label for="passWordDe" class="form-label">Password</label>
+                                            <input type="text" class="form-control" id="passWordDe" name="passWordDe" readonly>
+                                            <div class="form-message"></div>
+                                        </div>
+                                        <div class="col-lg-6 form-group">
+                                            <select class="form-select" name="roleDe" id="roleDe" readonly>
                                                 <option value="2" selected>STAFF</option>
                                             </select>
                                             <div class="form-message"></div>
@@ -72,7 +71,7 @@
                                 </div>
                                 <div class="col-6">
                                     <section>
-                                        <div class="wrapper">
+                                        <div class="wrapper" readonly>
                                             <div class="image-preview">
                                                 <canvas id="canvasCreate"></canvas>
                                             </div>

@@ -1,8 +1,11 @@
 package com.cg.api;
 
 import com.cg.exception.DataInputException;
+import com.cg.model.LocationRegion;
 import com.cg.model.Staff;
 import com.cg.model.User;
+import com.cg.model.dto.locationRegion.LocationRegionUpReqDTO;
+import com.cg.model.dto.product.ProductDTO;
 import com.cg.model.dto.product.ProductUpReqDTO;
 import com.cg.model.dto.staff.StaffCreReqDTO;
 import com.cg.model.dto.staff.StaffDTO;
@@ -35,12 +38,13 @@ public class StaffAPI {
     private AppUtils appUtils;
     @Autowired
     private IUserService userService;
+    @Autowired
+    private ILocationRegionService locationRegionService;
     @GetMapping
     public ResponseEntity<?> getAllStaff() {
         List<StaffDTO> staffDTOS = staffService.findAllStaffDTO();
         return new ResponseEntity<>(staffDTOS, HttpStatus.OK);
     }
-
 
     @GetMapping("/{staffId}")
     public ResponseEntity<?> getById(@PathVariable Long staffId) {
@@ -50,6 +54,7 @@ public class StaffAPI {
         }
         Staff staff = optionalStaff.get();
         StaffDTO staffDTO = staff.toStaffDTO();
+        staffDTO.setStaffAvatar(staff.getStaffAvatar());
         return new ResponseEntity<>(staffDTO, HttpStatus.OK);
     }
 
@@ -62,6 +67,7 @@ public class StaffAPI {
         }
         Staff staff = staffService.create(staffCreReqDTO);
         StaffDTO staffCreReqDTO1 = staff.toStaffDTO();
+        staffCreReqDTO1.setStaffAvatar(staff.getStaffAvatar());
         return new ResponseEntity<>(staffCreReqDTO1, HttpStatus.CREATED);
     }
 
@@ -88,18 +94,26 @@ public class StaffAPI {
 
             Staff staff = staffUpReqDTO.toStaffUpReqDTO(staffId);
 
+            Long locationRegionId = staffOptional.get().getLocationRegion().getId();
+            LocationRegionUpReqDTO locationRegionUpReqDTO = staffUpReqDTO.getLocationRegion();
+            LocationRegion locationRegion = locationRegionUpReqDTO.toLocationRegionUp(locationRegionId);
+            locationRegionService.save(locationRegion);
 
             staff.setStaffAvatar(staffOptional.get().getStaffAvatar());
             staff.setUser(user);
+            staff.setLocationRegion(locationRegion);
 
             staffService.save(staff);
             StaffUpResDTO staffUpResDTO = staff.toStaffUpResDTO();
+            staffUpResDTO.setStaffAvatar(staff.getStaffAvatar());
+            staffUpResDTO.setUser(staff.getUser());
             return new ResponseEntity<>(staffUpResDTO,HttpStatus.OK);
         }
         else {
-            Staff staffUp = staffService.update(staffUpReqDTO);
+            Staff staffUp = staffService.update(staffUpReqDTO,staffId);
             StaffUpResDTO staffUpResDTO = staffUp.toStaffUpResDTO();
-
+            staffUpResDTO.setStaffAvatar(staffUp.getStaffAvatar());
+            staffUpResDTO.setUser(staffUp.getUser());
             return new ResponseEntity<>(staffUpResDTO,HttpStatus.OK);
         }
     }

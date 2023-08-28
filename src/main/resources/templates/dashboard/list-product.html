@@ -18,7 +18,7 @@
 
 <body>
 <div id="wrapper">
-    <th:block th:replace="/layout/topbar :: topbar"></th:block>
+    <th:block th:replace="/layout/topbar :: topbarProduct"></th:block>
     <th:block th:replace="/layout/left-sidebar :: left-sidebar"></th:block>
 
     <th:block th:replace="/dashboard/frm_list_table :: frm_list_table"/>
@@ -163,6 +163,10 @@
     page.dialogs.elements.divImagePreviewCreate = $("#mdCreate div.image-preview, #mdCreate div.file-name");
     page.dialogs.elements.divImagePreviewUpdate = $("#mdUpdate div.image-preview, #mdUpdate div.file-name");
     page.dialogs.elements.btnClearImagePreview = $(".clear-image-preview i");
+
+
+    page.dialogs.elements.searcheProduct = $('#searchProduct')
+    page.dialogs.elements.btnSearchProduct= $('#btnSearchProduct')
 
 
     // page.elements.btnDelete = $("#tempProduct body");
@@ -432,7 +436,7 @@
             let price = product.price.toLocaleString('vi', {style: 'currency', currency: 'VND'});
             page.commands.addRow(price);
 
-            App.SweetAlert.showSuccessAlert(App.AlertMessageEn.SUCCESS_CREATED);
+            App.SweetAlert.showSuccessAlert("Tạo món thành công");
 
             page.dialogs.elements.modalCreate.modal('hide');
             page.commands.handleImagePopup();
@@ -440,8 +444,7 @@
             page.dialogs.elements.clearImagePreview()
             page.dialogs.elements.frmCreateCustomer.trigger("reset");
         }).fail((err) => {
-            console.log(err)
-            App.SweetAlert.showErrorAlert(App.AlertMessageVi.ERROR_404);
+            App.SweetAlert.showErrorAlert(err.responseJSON.message);
         }).always(function () {
 
             page.elements.loader.addClass("hide");
@@ -477,7 +480,7 @@
             let price = product.price.toLocaleString('vi', {style: 'currency', currency: 'VND'});
             page.commands.replace(productId, price);
 
-            App.SweetAlert.showSuccessAlert(App.AlertMessageEn.SUCCESS_UPDATED);
+            App.SweetAlert.showSuccessAlert("Sửa đổi thành công");
 
             page.dialogs.elements.modalUpdate.modal('hide');
             page.commands.handleImagePopup();
@@ -486,8 +489,7 @@
             page.dialogs.elements.frmUpdateCustomer.trigger("reset");
 
         }).fail((err) => {
-            console.log(err)
-            App.SweetAlert.showErrorAlert(App.AlertMessageVi.ERROR_400);
+            App.SweetAlert.showErrorAlert(err.responseJSON.message);
         }).always(function () {
             page.elements.loader.addClass("hide");
             page.dialogs.elements.btnUpdate.prop('disabled', false);
@@ -506,11 +508,12 @@
             url: page.url.doDelete + '/' + product.id,
         }).done((data) => {
 
-            App.SweetAlert.showSuccessAlert(App.AlertMessageEn.SUCCESS_DELETED);
+            App.SweetAlert.showSuccessAlert("Xoá món thành công");
 
             $("#tr_" + product.id).remove();
 
             page.commands.handleImagePopup();
+            page.commands.getAllProduct(1, 10);
 
         }).fail(function (jqXHR) {
             App.SweetAlert.showErrorAlert(jqXHR.responseJSON.message);
@@ -543,13 +546,33 @@
         });
     }
 
-    // page.commands.showLoadingSpinner = () => {
-    //     $('#loading').append('<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></div>')
-    // }
-    //
-    // page.commands.hideLoadingSpinner = () => {
-    //     $('#loading').remove();
-    // }
+    page.commands.getSearchProduct = () => {
+        let searchProduct =page.dialogs.elements.searcheProduct.val();
+        page.elements.frmListProduct.empty();
+        if (searchProduct === "") {
+            page.commands.getAllProduct(1,10);
+        } else {
+            $.ajax({
+                type: 'GET',
+                url: page.url.getProductByName + "/" + searchProduct
+            })
+                .done((data) => {
+
+                    data.forEach(item => {
+                        product = new Product(item.id, item.title, item.price, item.unit,item.category.title);
+                        avatar = item.avatar;
+                        price = product.price.toLocaleString('vi', {style: 'currency', currency: 'VND'});
+                        page.commands.addRow(price);
+                    })
+                    page.commands.displayPagination(data.totalPages, data.number + 1);
+                    page.commands.handleImagePopup();
+                    page.commands.showUpdateModal();
+                    page.dialogs.elements.clearImagePreview()
+                    page.dialogs.elements.frmUpdateCustomer.trigger("reset");
+                })
+        }
+
+    }
 
 
     page.dialogs.elements.clearImagePreview = () => {
@@ -736,6 +759,10 @@
         });
 
         page.commands.handleImagePopup();
+
+        page.dialogs.elements.btnSearchProduct.on('click', function () {
+            page.commands.getSearchProduct();
+        })
 
     }
 

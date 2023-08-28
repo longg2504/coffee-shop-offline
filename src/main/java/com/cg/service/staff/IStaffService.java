@@ -21,5 +21,5 @@ public interface IStaffService extends IGeneralService<Staff,Long> {
     List<StaffDTO> findStaffByTitle(String keySearch);
     Page<StaffDTO> findAllStaffDTOPage(Pageable pageable);
 
-    Staff update(StaffUpReqDTO staffUpReqDTO);
+    Staff update(StaffUpReqDTO staffUpReqDTO , Long staffId);
 }

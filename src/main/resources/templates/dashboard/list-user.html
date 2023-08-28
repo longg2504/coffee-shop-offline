@@ -4,16 +4,19 @@
     <title>Admin Dashboard Coffee</title>
     <th:block th:replace="/layout/head :: head"></th:block>
     <link rel="stylesheet" href="/assets/bootstrap/v.5.3.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/sweetalert2/sweetalert2.min.css">
     <link rel="stylesheet" href="/assets/css/magnific-popup.css">
     <link rel="stylesheet" href="/assets/css/preview-image.css">
+    <link rel="stylesheet" href="/assets/iziToast/iziToast-1.4.0.min.css">
     <link rel="stylesheet" href="/assets/css/styles.css">
+
+
 
 </head>
 
 <body>
 <div id="wrapper">
-    <th:block th:replace="/layout/topbar :: topbar"></th:block>
+    <th:block th:replace="/layout/topbar :: topbarStaff"></th:block>
     <th:block th:replace="/layout/left-sidebar :: left-sidebar"></th:block>
 
     <div class="content-page">
@@ -38,7 +41,7 @@
                 <div class="row">
                     <input type="hidden" id="currentRow"/>
 
-                    <table id="tbUser" class="table table-hover ">
+                    <table id="tbStaff" class="table table-hover ">
                         <thead>
                         <tr>
                             <th>#</th>
@@ -57,6 +60,13 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="row">
+                    <nav id="paginationNav">
+                        <ul class="pagination justify-content-center">
+                            <!-- Các nút phân trang sẽ được thêm vào đây -->
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
@@ -65,20 +75,31 @@
 
 <th:block th:replace="/layout/script :: script"></th:block>
 <th:block th:replace="/dashboard/modalCreateStaff "></th:block>
+<th:block th:replace="/dashboard/modalStaffDetail"></th:block>
+<th:block th:replace="/dashboard/modalUpdateStaff"></th:block>
+
+
+
 
 <script src="/assets/jquery/jquery-3.7.0.min.js"></script>
 <script src="/assets/jquery/jquery.validate.js"></script>
 <script src="/assets/bootstrap/v.5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/sweetalert2/sweetalert2.all.min.js"></script>
 <script src="/assets/js/magnific-popup-1.1.0.js"></script>
+<script src="/assets/iziToast/iziToast-1.4.0.js"></script>
 <script src="/assets/js/app.js"></script>
 
 
 <script>
     const page = {
         url: {
-            getAllUser: App.API_STAFF,
-            getAllRole: App.API_ROLE
+            getAllStaff: App.API_STAFF,
+            getAllStaffsPage: App.API_STAFF + '/page',
+            getStaffById: App.API_STAFF,
+            create: App.API_STAFF + '/create',
+            getSearchStaff: App.API_STAFF + '/searchTitle',
+            update: App.API_STAFF
+
         },
         elements: {},
         loadData: {},
@@ -89,23 +110,64 @@
             loadData: {}
         }
     }
-    page.elements.tblUserBody = $('#tbUser tbody')
+
+    let locationRegion = new LocationRegion();
+    let staff = new Staff();
+    let user = new User();
+    let staffId = 0;
+
+
+    page.elements.tbStaffBody = $('#tbStaff tbody')
     page.elements.roleSpan = $('#roleSpan')
     page.elements.roleSelect = $('#roleSelect')
 
+    page.elements.pagination = $('.pagination')
+
     page.elements.btnShowModalCreate = $('#btnShowModalCreate');
     page.elements.modalCreate = $('#modalCreate');
-    page.elements.fullNameCre = $('#fullNameCre');
-    page.elements.emailCre = $('#emailCre');
+    page.elements.formCreate = $('#formCreate');
+    page.elements.titleCre = $('#titleCre');
     page.elements.phoneCre = $('#phoneCre');
-    page.elements.balanceCre = $('#balanceCre');
     page.elements.provinceCre = $('#provinceCre');
     page.elements.districtCre = $('#districtCre');
     page.elements.wardCre = $('#wardCre');
     page.elements.addressCre = $('#addressCre');
+    page.elements.userNameCre = $('#userNameCre');
+    page.elements.passWordCre = $('#passWordCre');
+    page.elements.roleCre = $('#roleCre');
+    page.elements.errorAreaCreate = $('#modalCreate .modal-alert-danger')
     page.elements.btnCreate = $('#btnCreate');
 
-    page.commands.renderUser = (staff) => {
+    page.elements.modalUpdate = $('#modalUpdate');
+    page.elements.formUpdate = $('#formUpdate');
+    page.elements.titleUp = $('#titleUp');
+    page.elements.phoneUp = $('#phoneUp');
+    page.elements.provinceUp = $('#provinceUp');
+    page.elements.districtUp = $('#districtUp');
+    page.elements.wardUp = $('#wardUp');
+    page.elements.addressUp = $('#addressUp');
+    page.elements.errorAreaUpdate = $('#modalUpdate .error-area')
+    page.elements.btnUpdate = $('#btnUpdate');
+
+    page.elements.wrapper = $("section .wrapper");
+    page.elements.imageFileCreate = $("#imageFileCreate");
+    page.elements.imageFileUpdate = $("#imageFileUpdate");
+    page.elements.wrapperContent = $("section .wrapper .content");
+    page.elements.imagePreview = $("section .image-preview canvas");
+    page.elements.canvasCreate = $("#canvasCreate");
+    page.elements.canvasUpdate = $("#canvasUpdate");
+    page.elements.contextCreate = page.elements.canvasCreate[0].getContext('2d');
+    page.elements.contextUpdate = page.elements.canvasUpdate[0].getContext('2d');
+    page.elements.imagePreview.css("display", "none");
+    page.elements.divImagePreviewCreate = $("#modalCreate div.image-preview, #modalCreate div.file-name");
+    page.elements.divImagePreviewUpdate = $("#mdUpdate div.image-preview, #mdUpdate div.file-name");
+    page.elements.btnClearImagePreview = $(".clear-image-preview i");
+
+
+    page.dialogs.elements.searchStaff = $('#searchStaff')
+    page.dialogs.elements.btnSearchStaff= $('#btnSearchStaff')
+
+    page.commands.renderStaff = (staff) => {
         let imageThumbnail = App.BASE_URL_CLOUD_IMAGE + "/" + App.BASE_SCALE_IMAGE + "/" + staff.staffAvatar.fileFolder + "/" + staff.staffAvatar.fileName;
         return `
                 <tr>
@@ -125,86 +187,578 @@
                     </td>
 
                     <td>
-                        <button class="btn btn-outline-secondary">
-                            <i class="fas fa-user-edit"></i>
+                        <button class="btn btn-outline-success information" data-id="${staff.id}" >
+                            <i class="fas fa-user-check"></i>
                         </button>
                     </td>
                     <td>
-                        <button class="btn btn-outline-danger">
-                            <i class="fas fa-user-slash"></i>
+                        <button class="btn btn-outline-secondary edit" data-id="${staff.id}">
+                            <i class="fas fa-user-edit"></i>
                         </button>
                     </td>
+
                 </tr>
             `
     }
 
+    page.commands.getSearchStaff = () => {
+        let searchStaff =page.dialogs.elements.searchStaff.val();
+        page.elements.tbStaffBody.empty();
+        if(searchStaff === ""){
+            page.commands.getAllStaff(1,10);
+        }
+        else {
+            $.ajax({
+                type: 'GET',
+                url: page.url.getSearchStaff + "/" + searchStaff
+            })
+                .done((data) => {
 
-    page.commands.getAllUsers = () => {
-        // console.log('data')
+                    data.forEach(item => {
+                        console.log("item: " , item)
+                        const str = page.commands.renderStaff(item)
+                        page.elements.tbStaffBody.prepend(str)
+                    })
+                    page.commands.displayPagination(data.totalPages, data.number + 1);
+                })
+        }
+    }
+
+
+    page.commands.getAllStaff = (pageStaff , pageSize) => {
         $.ajax({
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             type: 'GET',
-            url: page.url.getAllUser
+            url: page.url.getAllStaffsPage,
+            data: {
+                page: pageStaff,
+                pageSize: pageSize
+            }
         })
             .done((data) => {
-                console.log(data);
-                $.each(data, (index, item) => {
-                    console.log(item)
-                    const str = page.commands.renderUser(item)
-                    page.elements.tblUserBody.append(str)
+                console.log(data)
+                page.elements.tbStaffBody.empty();
+                $.each(data.content, (index, item) => {
+                    const str = page.commands.renderStaff(item)
+                    page.elements.tbStaffBody.append(str)
                 })
-                // page.commands.updateRole();
+                page.commands.displayPagination(data.totalPages, data.number + 1);
             })
             .fail(function () {
                 App.SweetAlert.showErrorAlert(App.AlertMessageVi.ERROR_404);
             });
     }
 
-    // page.commands.getRoles = () => {
-    //     $.ajax({
-    //         headers: {
-    //             'Accept': 'application/json',
-    //             'Content-Type': 'application/json'
-    //         },
-    //         type: 'GET',
-    //         url: page.url.getAllRole,
-    //     })
-    //         .done((data) => {
-    //             page.elements.roleSelect.empty();
-    //             $.each(data, function (index, item) {
-    //                 page.elements.roleSelect.append($('<option>').val(item.id).text(item.code));
-    //             })
-    //         })
-    //         .fail(function () {
-    //             App.SweetAlert.showErrorAlert(App.AlertMessageVi.ERROR_404);
-    //         });
-    // }
+    page.commands.getStaffById = (id) => {
+        return $.ajax({
+            type: 'GET',
+            url: page.url.getStaffById + '/' + id,
+        });
+    }
 
-    // page.commands.updateRole = () => {
-    //     $('.update-role').on('click', () => {
-    //         page.elements.roleSpan.hide();
-    //         page.elements.roleSelect.removeAttr('hidden').show()
-    //         page.commands.getRoles();
-    //     })
-    //
-    // }
+    page.commands.displayPagination = (totalPages, currentPage) => {
+        page.elements.pagination.empty();
 
-    page.initializeControlEvent = () => {
-        page.elements.btnShowModalCreate.on('click', () => {
-            page.elements.modalCreate.modal('show');
+        let previousBtn = '<li class="page-item"><a class="page-link" href="#" onclick="page.commands.getAllStaff(' + (currentPage - 1) + ', 10)">Previous</a></li>';
+        page.elements.pagination.append(previousBtn);
+
+        for (let i = 1; i <= totalPages; i++) {
+            let pageBtn = '<li class="page-item ' + (i === currentPage ? 'active' : '') + '"><a class="page-link" href="#" onclick="page.commands.getAllStaff(' + i + ', 10)">' + i + '</a></li>';
+            page.elements.pagination.append(pageBtn);
+        }
+
+        let nextBtn = '<li class="page-item"><a class="page-link" href="#" onclick="page.commands.getAllStaff(' + (currentPage + 1) + ', 10)">Next</a></li>';
+        page.elements.pagination.append(nextBtn);
+    };
+
+
+
+    page.commands.getAllProvinces = () => {
+        return   $.ajax({
+            type: 'GET',
+            url: 'https://vapi.vnappmob.com/api/province/'
+        })
+            .done((data) => {
+                const provinces = data.results;
+                page.elements.provinceCre.empty();
+                page.elements.provinceUp.empty();
+
+                $.each(provinces, (index, item) => {
+
+                    const str = `<option value="${item.province_id}">${item.province_name}</option>`
+                    page.elements.provinceCre.append(str);
+                    page.elements.provinceUp.append(str);
+
+                })
+            })
+    }
+
+    page.commands.getALlDistricts = (provinceId, elementSelect) => {
+        return $.ajax({
+            type: 'GET',
+            url:  'https://vapi.vnappmob.com/api/province/district/' + provinceId
+        })
+            .done((data) => {
+                const districts = data.results;
+                elementSelect.empty();
+
+                $.each(districts, (index, item) => {
+                    const str = `<option value="${item.district_id}">${item.district_name}</option>`
+                    elementSelect.append(str);
+                });
+            })
+    }
+    page.commands.getAllWards = (districtId, elementSelect) => {
+        return  $.ajax({
+            type: 'GET',
+            url:'https://vapi.vnappmob.com/api/province/ward/' + districtId
+        })
+            .done((data) => {
+                const wards = data.results;
+
+                elementSelect.empty();
+
+                $.each(wards, (index, item) => {
+                    const str = `<option value="${item.ward_id}">${item.ward_name}</option>`;
+                    elementSelect.append(str);
+                });
+            });
+    }
+
+    page.commands.loadImageToCanvas = (imageFile, fileType, imageUrl) => {
+        page.elements.imagePreview.css("display", "");
+        page.elements.wrapper.addClass("active");
+        page.elements.wrapperContent.css("opacity", 0);
+
+        let imageObj = new Image();
+
+        imageObj.onload = function () {
+            page.elements.contextCreate.canvas.width = imageObj.width;
+            page.elements.contextCreate.canvas.height = imageObj.height;
+            page.elements.contextCreate.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height);
+
+        };
+
+        if (fileType === "BINARY") {
+            imageObj.src = URL.createObjectURL(imageFile);
+        } else {
+            imageObj.src = imageUrl;
+        }
+    }
+
+    page.commands.loadImageToCanvasUpdate = (imageFile, fileType, imageUrl) => {
+        page.elements.imagePreview.css("display", "");
+        page.elements.wrapper.addClass("active");
+        page.elements.wrapperContent.css("opacity", 0);
+
+        let imageObj = new Image();
+
+        imageObj.onload = function () {
+            page.elements.contextUpdate.canvas.width = imageObj.width;
+            page.elements.contextUpdate.canvas.height = imageObj.height;
+            page.elements.contextUpdate.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height);
+
+        };
+
+        if (fileType === "BINARY") {
+            imageObj.src = URL.createObjectURL(imageFile);
+        } else {
+            imageObj.src = imageUrl;
+        }
+    }
+    page.commands.changeImagePreviewCreate = () => {
+        let imageFile = page.elements.imageFileCreate[0].files[0];
+
+
+        if (imageFile) {
+            let reader = new FileReader();
+
+            reader.readAsDataURL(imageFile);
+
+            reader.onload = function (e) {
+                if (e.target.readyState === FileReader.DONE) {
+                    page.commands.loadImageToCanvas(imageFile, "BINARY", null);
+                }
+            }
+        } else {
+            page.elements.clearImagePreview();
+        }
+    }
+
+    page.commands.changeImagePreviewUpdate = () => {
+        let imageFile = page.elements.imageFileUpdate[0].files[0];
+
+
+        if (imageFile) {
+            let reader = new FileReader();
+
+            reader.readAsDataURL(imageFile);
+
+            reader.onload = function (e) {
+                if (e.target.readyState === FileReader.DONE) {
+                    page.commands.loadImageToCanvasUpdate(imageFile, "BINARY", null);
+                }
+            }
+        } else {
+            page.elements.clearImagePreview();
+        }
+    }
+    page.commands.handleImagePopup = () => {
+
+        $('.image-popup-vertical-fit').magnificPopup({
+            type: 'image',
+            closeOnContentClick: true,
+            mainClass: 'mfp-img',
+            image: {
+                verticalFit: true
+            },
+            gallery: {
+                enabled: true
+            }
+        });
+
+        $('.popup-youtube, .popup-vimeo, .popup-gmaps').magnificPopup({
+            disableOn: 700,
+            type: 'iframe',
+            mainClass: 'mfp-fade',
+            removalDelay: 160,
+            preloader: false,
+            fixedContentPos: false
+        });
+    }
+
+    page.commands.handleCreateStaff = () => {
+        page.elements.btnCreate.attr('disabled', true);
+
+        locationRegion.id = null;
+        locationRegion.provinceId = page.elements.provinceCre.val();
+        locationRegion.provinceName = page.elements.provinceCre.find('option:selected').text();
+        locationRegion.districtId = page.elements.districtCre.val();
+        locationRegion.districtName = page.elements.districtCre.find('option:selected').text();
+        locationRegion.wardId = page.elements.wardCre.val();
+        locationRegion.wardName = page.elements.wardCre.find('option:selected').text();
+        locationRegion.address = page.elements.addressCre.val();
+
+        user.userName = page.elements.userNameCre.val();
+        user.passWord=page.elements.passWordCre.val();
+        user.roleId = page.elements.roleCre.val();
+
+        staff.id = null;
+        staff.title = page.elements.titleCre.val();
+        staff.phone = page.elements.phoneCre.val();
+        staff.locationRegion = locationRegion;
+        staff.user = user;
+
+        let formData = new FormData();
+        formData.append('title', staff.title);
+        formData.append('phone', staff.phone);
+        formData.append('provinceId', locationRegion.provinceId);
+        formData.append('provinceName', locationRegion.provinceName);
+        formData.append('districtId', locationRegion.districtId);
+        formData.append('districtName', locationRegion.districtName);
+        formData.append('wardId', locationRegion.wardId);
+        formData.append('wardName', locationRegion.wardName);
+        formData.append('address', locationRegion.address);
+        formData.append('staffAvatar', page.elements.imageFileCreate[0].files[0]);
+        formData.append('username',user.userName);
+        formData.append('password',user.passWord);
+        formData.append('roleId',user.roleId);
+
+            $.ajax({
+                type: "POST",
+                contentType: false,
+                cache: false,
+                processData: false,
+                url: page.url.create,
+                data: formData
+            })
+                .done((data) => {
+                    const avatar = data.staffAvatar;
+                    const str = page.commands.renderStaff(data);
+                    page.elements.tbStaffBody.append(str)
+                    page.elements.modalCreate.modal('hide');
+                    page.commands.handleImagePopup();
+                    App.IziToast.showSuccessAlert("Thêm mới thành công")
+
+
+
+                })
+                .fail((error) => {
+                    App.SweetAlert.showErrorAlert(error.responseJSON.message);
+                })
+                .always(() => {
+                    page.elements.btnCreate.attr('disabled', false);
+                })
+    }
+
+    page.commands.showModalUpdate = (staffId) => {
+
+        page.commands.getStaffById(staffId).then((data) => {
+            staff = data;
+            console.log("data", data);
+            locationRegion = staff.locationRegion;
+            page.elements.titleUp.val(staff.title);
+            page.elements.phoneUp.val(staff.phone);
+            page.elements.addressUp.val(locationRegion.address);
+            page.elements.provinceUp.val(locationRegion.provinceId);
+
+            page.commands.getALlDistricts(locationRegion.provinceId, page.elements.districtUp).then(() => {
+                page.elements.districtUp.val(locationRegion.districtId);
+
+                page.commands.getAllWards(locationRegion.districtId, page.elements.wardUp).then(() => {
+                    page.elements.wardUp.val(locationRegion.wardId);
+                })
+            })
+            page.commands.loadImageToCanvasUpdate(null, "", staff.staffAvatar.fileUrl);
+            page.elements.modalUpdate.modal('show');
+        })
+
+    }
+
+    page.commands.updateStaff = () => {
+        const provinceId = page.elements.provinceUp.val();
+        const provinceName = page.elements.provinceUp.find('option:selected').text();
+        const districtId = page.elements.districtUp.val();
+        const districtName = page.elements.districtUp.find('option:selected').text();
+        const wardId = page.elements.wardUp.val();
+        const wardName = page.elements.wardUp.find('option:selected').text();
+        const address = page.elements.addressUp.val();
+
+        locationRegion.provinceId = provinceId;
+        locationRegion.provinceName = provinceName;
+        locationRegion.districtId = districtId;
+        locationRegion.districtName = districtName;
+        locationRegion.wardId = wardId;
+        locationRegion.wardName = wardName;
+        locationRegion.address = address;
+
+
+        const title = page.elements.titleUp.val();
+        const phone = page.elements.phoneUp.val();
+
+        staff.title = title;
+        staff.phone = phone;
+        staff.locationRegion = locationRegion;
+
+        let formData = new FormData();
+        formData.append('title', staff.title);
+        formData.append('phone', staff.phone);
+        formData.append('locationRegion.provinceId', locationRegion.provinceId);
+        formData.append('locationRegion.provinceName',locationRegion.provinceName);
+        formData.append('locationRegion.districtId',locationRegion.districtId);
+        formData.append('locationRegion.districtName', locationRegion.districtName);
+        formData.append('locationRegion.wardId', locationRegion.wardId);
+        formData.append('locationRegion.wardName', locationRegion.wardName);
+        formData.append('locationRegion.address', locationRegion.address);
+        if (page.elements.imageFileUpdate[0].files[0] != null) {
+            formData.append("staffAvatar", page.elements.imageFileUpdate[0].files[0]);
+        }
+
+        $.ajax({
+            type: "PATCH",
+            url: page.url.update + "/" + staffId,
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+        })
+            .done((data) => {
+                const str = page.commands.renderStaff(data);
+                const currentRow = $('#tr_' + staffId);
+                currentRow.replaceWith(str);
+                page.commands.getAllStaff(1, 10);
+                page.elements.modalUpdate.modal('hide');
+                App.SweetAlert.showSuccessAlert(App.AlertMessageEn.SUCCESS_UPDATED);
+            })
+            .fail((jqXHR) => {
+                console.log(jqXHR);
+            })
+    }
+
+
+    page.commands.onchangeProvince = (provinceId, districtElement, wardElement) => {
+        page.commands.getALlDistricts(provinceId, districtElement).then(() => {
+            const districtId = districtElement.val();
+            page.commands.getAllWards(districtId, wardElement);
         })
     }
 
+
+
+    page.initializeControlEvent = () => {
+        page.elements.provinceCre.on('change', function () {
+            const provinceId = $(this).val();
+            page.commands.onchangeProvince(provinceId, page.elements.districtCre, page.elements.wardCre);
+        })
+        page.elements.provinceUp.on('change', function () {
+            const provinceId = $(this).val();
+            page.commands.onchangeProvince(provinceId, page.elements.districtUp, page.elements.wardUp);
+        })
+        page.elements.districtCre.on('change', function () {
+            const districtId = $(this).val();
+            page.commands.getAllWards(districtId, page.elements.wardCre);
+        })
+        page.elements.districtUp.on('change', function () {
+            const districtId = $(this).val();
+            page.commands.getAllWards(districtId, page.elements.wardUp);
+        })
+
+        page.elements.btnShowModalCreate.on('click', () => {
+            page.elements.modalCreate.modal('show');
+        })
+
+        page.elements.btnCreate.on('click', () => {
+            page.elements.formCreate.trigger("submit");
+        })
+
+        page.elements.tbStaffBody.on('click', '.edit', function () {
+            staffId = $(this).data('id');
+            page.commands.showModalUpdate(staffId);
+        })
+
+        page.elements.btnUpdate.on('click', () => {
+            page.elements.formUpdate.trigger("submit");
+        })
+
+        page.elements.divImagePreviewCreate.on("click", function () {
+            page.elements.imageFileCreate.trigger("click");
+        });
+        page.elements.divImagePreviewUpdate.on("click", function () {
+            page.elements.imageFileUpdate.trigger("click");
+        });
+        page.elements.imageFileCreate.on("change", function () {
+            page.commands.changeImagePreviewCreate();
+        });
+        page.elements.imageFileUpdate.on("change", function () {
+            page.commands.changeImagePreviewUpdate();
+        });
+        page.elements.btnClearImagePreview.on("click", function () {
+            page.elements.clearImagePreview();
+        });
+
+
+        page.elements.clearImagePreview = () => {
+            page.elements.imageFileCreate.val("");
+            page.elements.imageFileUpdate.val("");
+            page.elements.imagePreview.css("display", "none");
+            page.elements.wrapper.removeClass("active");
+            page.elements.wrapperContent.css("opacity", 1);
+        }
+
+
+        page.commands.closeModalCreate = () => {
+            page.elements.formCreate[0].reset();
+            page.elements.formCreate.validate().resetForm();
+            page.elements.formCreate.find("input.error").removeClass("error");
+            page.elements.errorAreaCreate.empty().removeClass("show").addClass("hide");
+            page.elements.clearImagePreview();
+
+        }
+
+        page.elements.modalCreate.on("hidden.bs.modal", function () {
+            page.commands.closeModalCreate();
+        });
+
+        page.commands.handleImagePopup();
+
+        page.dialogs.elements.btnSearchStaff.on('click', function () {
+            page.commands.getSearchStaff();
+        })
+    }
+
+    page.elements.formCreate.validate({
+        rules: {
+            titleCre: {
+                required: true,
+            },
+            phoneCre: {
+                required: true,
+            }
+        },
+        messages: {
+            titleCre: {
+                required: "Vui lòng nhập họ và tên",
+            },
+            phoneCre: {
+                required: "Vui lòng nhập số điện thoại",
+            }
+        },
+        errorLabelContainer: "#modalCreate .modal-alert-danger",
+        errorPlacement: function (error, element) {
+            error.appendTo("#modalCreate .modal-alert-danger");
+        },
+        showErrors: function (errorMap, errorList) {
+            if (this.numberOfInvalids() > 0) {
+                $("#modalCreate .modal-alert-danger").removeClass("hide").addClass("show");
+            } else {
+                $("#modalCreate .modal-alert-danger").removeClass("show").addClass("hide").empty();
+                $("#formCreate input.error").removeClass("error");
+            }
+            this.defaultShowErrors();
+        },
+        submitHandler: function () {
+            page.commands.handleCreateStaff();
+        }
+
+
+    })
+
+    page.elements.formUpdate.validate({
+        rules: {
+            titleUp: {
+                required: true,
+            },
+            phoneUp: {
+                required: true,
+            }
+        },
+        messages: {
+            titleUp: {
+                required: "Vui lòng nhập họ và tên",
+            },
+            phoneUp: {
+                required: "Vui lòng nhập số điện thoại",
+            }
+        },
+        errorLabelContainer: "#modalUpdate .modal-alert-danger",
+        errorPlacement: function (error, element) {
+            error.appendTo("#modalUpdate .modal-alert-danger");
+        },
+        showErrors: function (errorMap, errorList) {
+            if (this.numberOfInvalids() > 0) {
+                $("#modalUpdate .modal-alert-danger").removeClass("hide").addClass("show");
+            } else {
+                $("#modalUpdate .modal-alert-danger").removeClass("show").addClass("hide").empty();
+                $("#formUpdate input.error").removeClass("error");
+            }
+            this.defaultShowErrors();
+        },
+        submitHandler: function () {
+            page.commands.updateStaff();
+        }
+    })
+
     page.loadData = () => {
-        page.commands.getAllUsers();
+        page.commands.getAllStaff(1,10);
+
+        page.commands.getAllProvinces().then(() => {
+            const provinceId = page.elements.provinceCre.val();
+
+            page.commands.getALlDistricts(provinceId, page.elements.districtCre).then(() => {
+                const districtId = page.elements.districtCre.val();
+                page.commands.getAllWards(districtId, page.elements.wardCre);
+            });
+        });
     }
 
     $(() => {
         page.loadData();
+
         page.initializeControlEvent();
+
     })
 
 </script>

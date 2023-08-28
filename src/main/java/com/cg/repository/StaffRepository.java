@@ -3,10 +3,12 @@ package com.cg.repository;
 import com.cg.model.Staff;
 import com.cg.model.User;
 import com.cg.model.dto.staff.StaffDTO;
+import com.cg.model.dto.tableOrder.TableOrderDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -62,4 +64,9 @@ public interface StaffRepository extends JpaRepository<Staff,Long> {
     Optional<Staff> findByUserAndDeletedIsFalse(User user);
 
     Optional<Staff> findByIdAndDeletedFalse(Long id);
+
+
+
+
+
 }

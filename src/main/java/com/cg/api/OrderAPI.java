@@ -186,6 +186,10 @@ public class OrderAPI {
             throw new DataInputException("Bàn không tồn tại");
         });
 
+        if(tableOrderEmpty.getId() == tableOrderBusy.getId()) {
+            throw new DataInputException("Bàn chuyển và bàn chuyển là một xin vui lòng kiểm tra lại");
+        }
+
         List<Order> orderEmptys = orderService.findByTableOrderAndPaid(tableOrderEmpty, false);
         List<Order> orderBusys = orderService.findByTableOrderAndPaid(tableOrderBusy, false);
 

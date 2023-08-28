@@ -27,11 +27,12 @@ class App {
 
     static API_STAFF = this.API_SERVER + '/staff'
 
-    static BASE_URL_CLOUD_IMAGE ="https://res.cloudinary.com/dadtniwa8/image/upload";
+    static BASE_URL_CLOUD_IMAGE = "https://res.cloudinary.com/dadtniwa8/image/upload";
     static IMAGE_SCALE_W_280_h_180_Q_100 = 'c_scale,w_280,h_180,q_100'
     static IMAGE_SCALE_W_250_h_200_Q_90 = 'c_scale,w_250,h_2000,q_90'
     static IMAGE_SCALE_W_100_h_80_Q_90 = 'c_scale,w_100,h_80,q_90'
     static BASE_SCALE_IMAGE = "c_limit,w_50,h_50,q_100";
+
 
 
     static AlertMessageEn = class {
@@ -167,12 +168,6 @@ class App {
     }
 }
 
-
-
-
-
-
-
 class Product{
     constructor(id,title,price,unit,category,avatar) {
         this.id=id;
@@ -205,6 +200,40 @@ class Avatar {
         this.fileName = fileName;
         this.fileFolder = fileFolder;
         this.fileUrl = fileUrl;
+    }
+}
+
+class LocationRegion {
+    constructor(id, provinceId, provinceName, districtId, districtName, wardId, wardName, address) {
+        this.id = id;
+        this.provinceId = provinceId;
+        this.provinceName = provinceName;
+        this.districtId = districtId;
+        this.districtName = districtName;
+        this.wardId = wardId;
+        this.wardName = wardName;
+        this.address = address;
+    }
+}
+
+class Staff {
+    constructor(id,title,phone,locationRegion,staffAvatar) {
+        this.id=id;
+        this.title=title;
+        this.phone=phone;
+        this.locationRegion=locationRegion;
+        this.staffAvatar=staffAvatar;
+
+    }
+}
+
+class User {
+    constructor(id,userName,passWord,role) {
+        this.id =id;
+        this.userName=userName;
+        this.passWord=passWord;
+        this.role=role;
+
     }
 }
 

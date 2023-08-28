@@ -49,6 +49,11 @@ public class TableOrderSerivceImpl implements ITableOrderService{
     }
 
     @Override
+    public List<TableOrderDTO> findAllTablesWithoutSenderId(Long tableId) {
+        return tableOrderRepository.findAllTablesWithoutSenderId(tableId);
+    }
+
+    @Override
     public void delete(TableOrder tableOrder) {
 
     }
@@ -57,6 +62,8 @@ public class TableOrderSerivceImpl implements ITableOrderService{
     public void deleteById(Long id) {
 
     }
+
+
 
 
 }

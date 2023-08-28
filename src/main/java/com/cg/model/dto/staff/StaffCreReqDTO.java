@@ -75,7 +75,6 @@ public class StaffCreReqDTO implements Validator {
         String phone = staffCreReqDTO.phone;
         String username = staffCreReqDTO.username;
         String password = staffCreReqDTO.password;
-
         if (title.isEmpty()) {
             errors.rejectValue("title", "title.null", "Tên không được phép rỗng");
             return;

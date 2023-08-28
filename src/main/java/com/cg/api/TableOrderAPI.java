@@ -59,4 +59,12 @@ public class TableOrderAPI {
         return new ResponseEntity<>(tableOrderCreateResDTO,HttpStatus.CREATED);
     }
 
+    @GetMapping("/tables-without-tableSend/{tableId}")
+    public ResponseEntity<?> getAllTablesWithoutSender(@PathVariable Long tableId) {
+
+        List<TableOrderDTO> tableSelect = tableOrderService.findAllTablesWithoutSenderId(tableId);
+
+        return new ResponseEntity<>(tableSelect, HttpStatus.OK);
+    }
+
 }
