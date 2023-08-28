@@ -505,7 +505,6 @@
             contentType: false,
         })
             .done((data) => {
-                console.log("data1",data)
                 const str = page.commands.renderStaff(data);
                 const currentRow = $('#tr_' + staffId);
                 currentRow.replaceWith(str);

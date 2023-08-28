@@ -1,6 +1,7 @@
 package com.cg.model.dto.staff;
 
 import com.cg.model.StaffAvatar;
+import com.cg.model.User;
 import com.cg.model.dto.locationRegion.LocationRegionUpResDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,4 +21,5 @@ public class StaffUpResDTO {
     private String phone;
     private LocationRegionUpResDTO locationRegion;
     private StaffAvatar staffAvatar;
+    private User user;
 }

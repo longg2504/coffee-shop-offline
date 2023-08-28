@@ -107,12 +107,14 @@ public class StaffAPI {
             staffService.save(staff);
             StaffUpResDTO staffUpResDTO = staff.toStaffUpResDTO();
             staffUpResDTO.setStaffAvatar(staff.getStaffAvatar());
+            staffUpResDTO.setUser(staff.getUser());
             return new ResponseEntity<>(staffUpResDTO,HttpStatus.OK);
         }
         else {
             Staff staffUp = staffService.update(staffUpReqDTO,staffId);
             StaffUpResDTO staffUpResDTO = staffUp.toStaffUpResDTO();
             staffUpResDTO.setStaffAvatar(staffUp.getStaffAvatar());
+            staffUpResDTO.setUser(staffUp.getUser());
 
             return new ResponseEntity<>(staffUpResDTO,HttpStatus.OK);
         }
