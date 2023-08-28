@@ -78,13 +78,11 @@
             data: JSON.stringify(obj)
         })
             .done((data) => {
-                App.IziToast.showSuccessAlert("Đăng nhập thành công")
+                App.IziToast.showSuccessAlert("Đăng nhập thành công");
                 if(data.roles[0].authority === "ADMIN"){
-                    // console.log("admin")
                     location.href = "/dashboards";
                 }
                 else {
-                    // console.log("STAFF")
                     location.href = "/shop";
                 }
 
@@ -95,23 +93,6 @@
             })
     })
 
-
-    // $(document).ready(function () {
-    //     let messageElements = document.querySelectorAll(".message");
-    //     let check = false;
-    //
-    //     for (let i = 0; i < messageElements.length; i++) {
-    //         if (messageElements[i].innerHTML.length > 0) {
-    //             check = true;
-    //             break;
-    //         }
-    //     }
-    //
-    //     if (check) {
-    //         const container = document.getElementById('container');
-    //         container.classList.add("right-panel-active");
-    //     }
-    // });
 </script>
 </body>
 
