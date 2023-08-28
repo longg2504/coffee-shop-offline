@@ -38,7 +38,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "pr. productAvatar " +
             ") " +
             "From Product AS pr " +
-            "WHERE pr.category.id = :categoryId")
+            "WHERE pr.category.id = :categoryId " +
+            "AND pr.deleted = false ")
     List<ProductDTO> findAllByCategoryLike(Long categoryId);
 
     @Query("SELECT NEW com.cg.model.dto.product.ProductDTO (" +
@@ -49,9 +50,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "pro.category, " +
             "pro.productAvatar" +
             ") " +
-            "FROM Product as pro " +
-            "WHERE pro.title like :keySearch"
-    )
+            "FROM Product AS pro " +
+            "WHERE pro.title like :keySearch " +
+            "AND pro.deleted = false")
     List<ProductDTO> findProductByName(String keySearch);
 
 

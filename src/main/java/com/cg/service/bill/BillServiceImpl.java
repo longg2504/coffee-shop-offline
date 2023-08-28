@@ -15,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 public class BillServiceImpl implements IBillService{
@@ -94,4 +98,31 @@ public class BillServiceImpl implements IBillService{
         BillCreResDTO billResDTO = bill.toBillResDTO();
         return billResDTO;
     }
+
+    @Override
+    public List<BillDTO> getBillByDate(Integer year, Integer month, Integer day) {
+        LocalDate start = getDate(year, month, day);
+        if(day == null){
+            return billRepository.getAllBillByDate(start, getLastDayOfMonth(start));
+        }
+
+
+        return billRepository.getAllBillByDate(start, start);
+    }
+    public LocalDate getDate(int year, int month, Integer day) {
+        if (day == null) {
+            // Trả về ngày đầu tháng
+            return LocalDate.of(year, month, 1);
+        } else {
+            // Trả về ngày tháng của năm
+            return LocalDate.of(year, month, day);
+        }
+    }
+
+
+    public LocalDate getLastDayOfMonth(LocalDate date) {
+        return date.with(TemporalAdjusters.lastDayOfMonth());
+    }
+
+
 }

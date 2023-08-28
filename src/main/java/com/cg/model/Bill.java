@@ -1,6 +1,7 @@
 package com.cg.model;
 
 import com.cg.model.dto.bill.BillCreResDTO;
+import com.cg.model.dto.bill.BillDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,11 +34,24 @@ public class Bill extends BaseEntity{
 
     public BillCreResDTO toBillResDTO() {
         return new BillCreResDTO()
-                .setId(null)
+                .setId(order.getId())
                 .setTable(order.getTableOrder().toTableOrderDTO())
                 .setTotalAmount(order.getTotalAmount())
                 .setPaid(getOrder().getPaid())
                 .setOrderId(getOrder().getId())
                 ;
     }
+
+    public BillDTO toBillDTO() {
+        return new BillDTO()
+                .setId(order.getId())
+                .setTableTitle(order.getTableOrder().getTitle())
+                .setTotal(order.getTotalAmount())
+                .setCreatedAt(order.getCreatedAt())
+                .setStaffName(order.getStaff().getTitle())
+                .setOrderId(order.getId())
+                ;
+    }
+
+
 }

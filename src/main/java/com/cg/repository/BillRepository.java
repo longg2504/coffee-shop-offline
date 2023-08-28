@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -55,4 +56,10 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
             "WHERE DATE(b.createdAt) = :eventDate"
     )
     List<BillDTO> findBillByCreatedAts(@Param("eventDate") Date eventDate);
+
+    @Query(value = "SELECT b FROM Bill b WHERE " +
+            "DATE_FORMAT(b.createdAt, '%Y-%m-%d') >= DATE_FORMAT(:start, '%Y-%m-%d')" +
+            " AND DATE_FORMAT(b.createdAt, '%Y-%m-%d') <= DATE_FORMAT(:end, '%Y-%m-%d')")
+    List<BillDTO> getAllBillByDate(LocalDate start, LocalDate end);
+
 }
