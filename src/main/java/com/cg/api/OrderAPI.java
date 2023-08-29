@@ -182,11 +182,11 @@ public class OrderAPI {
         TableOrder tableOrderBusy = tableOrderService.findById(orderUpChangeToTableReqDTO.getTableIdBusy()).orElseThrow(() -> {
             throw new DataInputException("Bàn không tồn tại");
         });
-        TableOrder tableOrderEmpty = tableOrderService.findById(orderUpChangeToTableReqDTO.getTableIdBusy()).orElseThrow(() -> {
+        TableOrder tableOrderEmpty = tableOrderService.findById(orderUpChangeToTableReqDTO.getTableIdEmpty()).orElseThrow(() -> {
             throw new DataInputException("Bàn không tồn tại");
         });
 
-        if(tableOrderEmpty.getId() == tableOrderBusy.getId()) {
+        if(tableOrderEmpty.getId().equals(tableOrderBusy.getId()) ) {
             throw new DataInputException("Bàn chuyển và bàn chuyển là một xin vui lòng kiểm tra lại");
         }
 
@@ -201,7 +201,7 @@ public class OrderAPI {
             throw new DataInputException("Lỗi hệ thống, vui lòng liên hệ ADMIN để kiểm tra lại dữ liệu");
         }
 
-        if (orderEmptys.size() == 0) {
+        if (orderEmptys.size() != 0) {
             throw new DataInputException("Bàn nhận này đang có hoá đơn, vui lòng kiểm tra lại thông tin");
         }
 

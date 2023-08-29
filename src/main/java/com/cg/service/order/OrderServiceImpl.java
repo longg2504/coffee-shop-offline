@@ -177,7 +177,7 @@ public class OrderServiceImpl implements IOrderService{
         List<OrderDetailProductUpResDTO> newOrderDetails = orderDetailRepository.findAllOrderDetailProductUpResDTO(orderBusy.getId());
 
         OrderUpChangeToTableResDTO orderUpChangeToTableResDTO = new OrderUpChangeToTableResDTO();
-        orderUpChangeToTableResDTO.setTable(orderBusy.getTableOrder().toTableOrderResDTO());
+        orderUpChangeToTableResDTO.setTableOrder(orderBusy.getTableOrder().toTableOrderResDTO());
         orderUpChangeToTableResDTO.setTotalAmount(orderBusy.getTotalAmount());
         orderUpChangeToTableResDTO.setProducts(newOrderDetails);
 

@@ -223,6 +223,7 @@
     let product = new Product();
     let tableOrder = new TableOrder();
     let category = new Category();
+    let tables = []
     let currentTable = 0;
     // let orderDetails = [];
 
@@ -321,8 +322,9 @@
             url: page.url.getALLTabOrders
         })
             .done((data) => {
+                tables = data;
                 page.elements.tablePannel.empty();
-                data.forEach(item => {
+                tables.forEach(item => {
                     tableOrder = item;
                     let str = page.commands.renderTable(tableOrder)
                     page.elements.tablePannel.append(str)
@@ -719,19 +721,37 @@
             .done((data) =>{
                 tableStatus = 'EMPTY';
 
-                const senderTable = data.tableReceive;
-                const receiveTable = data.tableSend;
+                // const senderTable = data.tableReceive;
+                // const receiveTable = data.tableSend;
 
-                const senderTableStr = page.commands.renderTable(senderTable);
-                $('#tr_' + senderTable.id).replaceWith(senderTableStr);
+                // const senderTableStr = page.commands.renderTable(senderTable);
+                // $('#tr_' + senderTable.id).replaceWith(senderTableStr);
 
 
-                const receiveTableStr = page.commands.renderTable(receiveTable);
-                $('#tr_' + receiveTable.id).replaceWith(receiveTableStr);
-                console.log(receiveTable);
+                // const receiveTableStr = page.commands.renderTable(receiveTable);
+                // $('#tr_' + receiveTable.id).replaceWith(receiveTableStr);
+                // console.log(receiveTable);
+
+                tables.filter((item) => {
+                    if (item.id == tableIdEmpty) {
+                        item.status = 'BUSY'
+                    }
+
+                    if (item.id == currentTable) {
+                        item.status = 'EMPTY'
+                    }
+                })
+
+                page.elements.tablePannel.empty();
+
+                tables.forEach(item => {
+                    let str = page.commands.renderTable(item)
+                    page.elements.tablePannel.append(str)
+
+                })
 
                 page.elements.boardWaiting.removeClass('hide');
-                page.elements.contentItems.addClass('hide');
+                page.elements.contentItems.empty().addClass('hide');
                 $('#totalAmount').text('0đ')
 
                 page.dialogs.elements.modalChangToTable.modal('hide');
@@ -777,7 +797,6 @@
 
         page.dialogs.elements.btnOrderProduct.on('click', function () {
             page.dialogs.elements.frmProductDetail.trigger('submit');
-
         })
 
         page.elements.contentItems.on('click', '.btn-delete', function () {

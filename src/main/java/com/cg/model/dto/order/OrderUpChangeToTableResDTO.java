@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @Accessors(chain = true)
 public class OrderUpChangeToTableResDTO {
-    private TableOrderResDTO table;
+    private TableOrderResDTO tableOrder;
     private BigDecimal totalAmount;
     private List<OrderDetailProductUpResDTO> products;
 
