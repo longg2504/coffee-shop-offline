@@ -68,11 +68,11 @@
 
                 </div>
                 <div class="row">
-                        <nav id="paginationNav">
-                            <ul class="pagination justify-content-center">
-                                <!-- Các nút phân trang sẽ được thêm vào đây -->
-                            </ul>
-                        </nav>
+                    <nav id="paginationNav">
+                        <ul class="pagination justify-content-center">
+                            <!-- Các nút phân trang sẽ được thêm vào đây -->
+                        </ul>
+                    </nav>
                 </div>
 
                 <div class="loader hide"></div>
@@ -430,14 +430,12 @@
             url: page.url.doCreate,
             data: formData
         }).done((data) => {
-
             product = data;
             avatar = product.avatar;
             let price = product.price.toLocaleString('vi', {style: 'currency', currency: 'VND'});
             page.commands.addRow(price);
-
+            page.commands.getAllProduct(1,10);
             App.SweetAlert.showSuccessAlert("Tạo món thành công");
-
             page.dialogs.elements.modalCreate.modal('hide');
             page.commands.handleImagePopup();
             // page.commands.hideLoadingSpinner();
