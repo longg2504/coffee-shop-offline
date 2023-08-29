@@ -48,10 +48,10 @@
                             <th>Ảnh</th>
                             <th>Họ tên</th>
                             <th>Số điện thoại</th>
-                            <th>Province</th>
-                            <th>District</th>
-                            <th>Ward</th>
-                            <th>Address</th>
+                            <th>Tỉnh</th>
+                            <th>Quận/Huyện</th>
+                            <th>Phường/Xã</th>
+                            <th>Địa chỉ</th>
                             <th>Vai trò</th>
                             <th colspan="2">Action</th>
                         </tr>
@@ -67,8 +67,10 @@
                         </ul>
                     </nav>
                 </div>
+                <div class="loader hide"></div>
             </div>
         </div>
+
     </div>
     <th:block th:replace="/layout/footer :: footer"></th:block>
 </div>
@@ -98,7 +100,8 @@
             getStaffById: App.API_STAFF,
             create: App.API_STAFF + '/create',
             getSearchStaff: App.API_STAFF + '/searchTitle',
-            update: App.API_STAFF
+            update: App.API_STAFF,
+            doDelete: App.API_STAFF + '/delete'
 
         },
         elements: {},
@@ -116,7 +119,7 @@
     let user = new User();
     let staffId = 0;
 
-
+    page.elements.loader = $(".loader");
     page.elements.tbStaffBody = $('#tbStaff tbody')
     page.elements.roleSpan = $('#roleSpan')
     page.elements.roleSelect = $('#roleSelect')
@@ -160,12 +163,14 @@
     page.elements.contextUpdate = page.elements.canvasUpdate[0].getContext('2d');
     page.elements.imagePreview.css("display", "none");
     page.elements.divImagePreviewCreate = $("#modalCreate div.image-preview, #modalCreate div.file-name");
-    page.elements.divImagePreviewUpdate = $("#mdUpdate div.image-preview, #mdUpdate div.file-name");
+    page.elements.divImagePreviewUpdate = $("#modalUpdate div.image-preview, #modalUpdate div.file-name");
     page.elements.btnClearImagePreview = $(".clear-image-preview i");
 
 
     page.dialogs.elements.searchStaff = $('#searchStaff')
     page.dialogs.elements.btnSearchStaff= $('#btnSearchStaff')
+
+    page.elements.loader = $(".loader");
 
     page.commands.renderStaff = (staff) => {
         let imageThumbnail = App.BASE_URL_CLOUD_IMAGE + "/" + App.BASE_SCALE_IMAGE + "/" + staff.staffAvatar.fileFolder + "/" + staff.staffAvatar.fileName;
@@ -185,17 +190,17 @@
                         <select class="form-select" name="role" id="roleSelect" hidden="true">
                         </select>
                     </td>
-
-                    <td>
-                        <button class="btn btn-outline-success information" data-id="${staff.id}" >
-                            <i class="fas fa-user-check"></i>
-                        </button>
-                    </td>
                     <td>
                         <button class="btn btn-outline-secondary edit" data-id="${staff.id}">
                             <i class="fas fa-user-edit"></i>
                         </button>
                     </td>
+                    <td>
+                        <button class="btn btn-outline-danger delete" data-id="${staff.id}" >
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+
 
                 </tr>
             `
@@ -222,6 +227,41 @@
                     page.commands.displayPagination(data.totalPages, data.number + 1);
                 })
         }
+    }
+    page.commands.showDeleteConfirm = () => {
+
+        App.SweetAlert.showDeleteConfirmDialog()
+            .then((result) => {
+                if (result.isConfirmed) {
+                    page.commands.deleteStaff();
+                }
+            });
+    }
+    page.commands.deleteStaff = () => {
+        page.elements.loader.removeClass("hide");
+
+        $.ajax({
+            type: "DELETE",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            url: page.url.doDelete + '/' + staffId,
+        }).done((data) => {
+
+            App.SweetAlert.showSuccessAlert("Xoá món thành công");
+
+            $("#tr_" + staffId).remove();
+
+            page.commands.handleImagePopup();
+            page.commands.getAllStaff(1, 10);
+
+        }).fail(function (jqXHR) {
+            App.SweetAlert.showErrorAlert(jqXHR.responseJSON.message);
+        }).always(function () {
+            page.elements.loader.addClass("hide");
+
+        });
     }
 
 
@@ -431,7 +471,8 @@
     }
 
     page.commands.handleCreateStaff = () => {
-        page.elements.btnCreate.attr('disabled', true);
+        page.elements.loader.removeClass("hide");
+        page.elements.btnCreate.prop('disabled', true);
 
         locationRegion.id = null;
         locationRegion.provinceId = page.elements.provinceCre.val();
@@ -467,31 +508,33 @@
         formData.append('password',user.passWord);
         formData.append('roleId',user.roleId);
 
-            $.ajax({
-                type: "POST",
-                contentType: false,
-                cache: false,
-                processData: false,
-                url: page.url.create,
-                data: formData
+        $.ajax({
+            type: "POST",
+            contentType: false,
+            cache: false,
+            processData: false,
+            url: page.url.create,
+            data: formData
+        })
+
+            .done((data) => {
+                const avatar = data.staffAvatar;
+                const str = page.commands.renderStaff(data);
+                page.elements.tbStaffBody.append(str)
+
+
+                page.elements.modalCreate.modal('hide');
+                page.commands.handleImagePopup();
+                App.SweetAlert.showSuccessAlert("Thêm mới thành công")
+
             })
-                .done((data) => {
-                    const avatar = data.staffAvatar;
-                    const str = page.commands.renderStaff(data);
-                    page.elements.tbStaffBody.append(str)
-
-
-                    page.elements.modalCreate.modal('hide');
-                    page.commands.handleImagePopup();
-                    App.IziToast.showSuccessAlert("Thêm mới thành công")
-
-                })
-                .fail((error) => {
-                    App.SweetAlert.showErrorAlert(error.responseJSON.message);
-                })
-                .always(() => {
-                    page.elements.btnCreate.attr('disabled', false);
-                })
+            .fail((error) => {
+                App.SweetAlert.showErrorAlert(error.responseJSON.message);
+            })
+            .always(function () {
+                page.elements.loader.addClass("hide");
+                page.elements.btnCreate.prop('disabled', false);
+            })
     }
 
     page.commands.showModalUpdate = (staffId) => {
@@ -623,6 +666,12 @@
             page.elements.formUpdate.trigger("submit");
         })
 
+        page.elements.tbStaffBody.on("click", ".delete", function () {
+            // page.elements.currentRow.val($(this).closest("tr").attr("id"));
+            staffId = $(this).data('id');
+            page.commands.showDeleteConfirm(staffId);
+        });
+
         page.elements.divImagePreviewCreate.on("click", function () {
             page.elements.imageFileCreate.trigger("click");
         });
@@ -680,6 +729,16 @@
         page.dialogs.elements.btnSearchStaff.on('click', function () {
             page.commands.getSearchStaff();
         })
+    }
+    function showPassword() {
+        var passwordInput = document.getElementById("passWordCre");
+
+        // Kiểm tra xem trường nhập đang ở dạng password hay không
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text"; // Thay đổi thành text để hiển thị mật khẩu
+        } else {
+            passwordInput.type = "password"; // Nếu đã ở dạng text, chuyển lại thành password
+        }
     }
 
     page.elements.formCreate.validate({
