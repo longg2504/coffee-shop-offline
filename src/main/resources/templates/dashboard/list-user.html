@@ -146,7 +146,7 @@
     page.elements.districtUp = $('#districtUp');
     page.elements.wardUp = $('#wardUp');
     page.elements.addressUp = $('#addressUp');
-    page.elements.errorAreaUpdate = $('#modalUpdate .error-area')
+    page.elements.errorAreaUpdate = $('#modalUpdate .modal-alert-danger')
     page.elements.btnUpdate = $('#btnUpdate');
 
     page.elements.wrapper = $("section .wrapper");
@@ -479,11 +479,11 @@
                     const avatar = data.staffAvatar;
                     const str = page.commands.renderStaff(data);
                     page.elements.tbStaffBody.append(str)
+
+
                     page.elements.modalCreate.modal('hide');
                     page.commands.handleImagePopup();
                     App.IziToast.showSuccessAlert("Thêm mới thành công")
-
-
 
                 })
                 .fail((error) => {
@@ -658,9 +658,22 @@
 
         }
 
+        page.commands.closeModalUpdate = () => {
+            page.elements.formUpdate[0].reset();
+            page.elements.formUpdate.validate().resetForm();
+            page.elements.formUpdate.find("input.error").removeClass("error");
+            page.elements.errorAreaUpdate.empty().removeClass("show").addClass("hide");
+            page.elements.clearImagePreview();
+
+        }
+
         page.elements.modalCreate.on("hidden.bs.modal", function () {
             page.commands.closeModalCreate();
         });
+
+        page.elements.modalUpdate.on("hidden.bs.modal" , function (){
+            page.commands.closeModalUpdate();
+        })
 
         page.commands.handleImagePopup();
 
@@ -673,18 +686,47 @@
         rules: {
             titleCre: {
                 required: true,
+                minlength: 5,
+                maxlength: 25
             },
             phoneCre: {
                 required: true,
+                isNumberWithSpace: true
+            },
+            userNameCre: {
+                required:true,
+                isEmail: true
+            },
+            passWordCre:{
+                required:true,
+            },
+            addressCre: {
+                required:true
             }
+
         },
         messages: {
             titleCre: {
                 required: "Vui lòng nhập họ và tên",
+                minlength: 'Họ tên tối thiểu là 5 ký tự',
+                maxlength: 'Họ tên tối đa là 25 ký tự'
             },
             phoneCre: {
                 required: "Vui lòng nhập số điện thoại",
+                isNumberWithSpace : "Vui lòng nhập phone bằng ký tự số"
+            },
+            userNameCre: {
+                required: "Vui lòng nhập tài khoản",
+            },
+            passWordCre:{
+                required: "Vui lòng nhập mật khẩu" ,
+            },
+            addressCre: {
+                required:"Vui lòng nhập địa chỉ "
             }
+
+
+
         },
         errorLabelContainer: "#modalCreate .modal-alert-danger",
         errorPlacement: function (error, element) {
@@ -710,17 +752,32 @@
         rules: {
             titleUp: {
                 required: true,
+                minlength: 5,
+                maxlength: 25
+
             },
             phoneUp: {
                 required: true,
+                isNumberWithSpace: true
+            },
+            addressUp: {
+                required: true,
             }
+
         },
         messages: {
             titleUp: {
                 required: "Vui lòng nhập họ và tên",
+                minlength: 'Họ tên tối thiểu là 5 ký tự',
+                maxlength: 'Họ tên tối đa là 25 ký tự'
+
             },
             phoneUp: {
                 required: "Vui lòng nhập số điện thoại",
+                isNumberWithSpace : "Vui lòng nhập phone bằng ký tự số"
+            },
+            addressUp: {
+                required: "Vui lòng nhập địa chỉ",
             }
         },
         errorLabelContainer: "#modalUpdate .modal-alert-danger",
@@ -740,6 +797,14 @@
             page.commands.updateStaff();
         }
     })
+
+    $.validator.addMethod("isEmail", function (value, element) {
+        return this.optional(element) || /[A-Za-z0-9+_.-]+@[a-z]+\.[a-z]+/.test(value);
+    }, "Vui lòng nhập đúng định dạng email");
+
+    $.validator.addMethod("isNumberWithSpace", function (value, element) {
+        return this.optional(element) || /^\s*[0-9,\s]+\s*$/i.test(value);
+    }, "Vui lòng nhập giá trị số");
 
     page.loadData = () => {
         page.commands.getAllStaff(1,10);

@@ -1,7 +1,9 @@
 package com.cg.api;
 
 import com.cg.exception.DataInputException;
+import com.cg.exception.EmailExistsException;
 import com.cg.model.LocationRegion;
+import com.cg.model.Role;
 import com.cg.model.Staff;
 import com.cg.model.User;
 import com.cg.model.dto.locationRegion.LocationRegionUpReqDTO;
@@ -12,6 +14,7 @@ import com.cg.model.dto.staff.StaffDTO;
 import com.cg.model.dto.staff.StaffUpReqDTO;
 import com.cg.model.dto.staff.StaffUpResDTO;
 import com.cg.service.locationRegion.ILocationRegionService;
+import com.cg.service.role.IRoleService;
 import com.cg.service.staff.IStaffService;
 import com.cg.service.user.IUserService;
 import com.cg.utils.AppUtils;
@@ -40,6 +43,8 @@ public class StaffAPI {
     private IUserService userService;
     @Autowired
     private ILocationRegionService locationRegionService;
+    @Autowired
+    private IRoleService roleService;
     @GetMapping
     public ResponseEntity<?> getAllStaff() {
         List<StaffDTO> staffDTOS = staffService.findAllStaffDTO();
@@ -64,6 +69,16 @@ public class StaffAPI {
         new StaffCreReqDTO().validate(staffCreReqDTO,bindingResult);
         if (bindingResult.hasFieldErrors()){
             return appUtils.mapErrorToResponse(bindingResult);
+        }
+
+        Boolean existsByUsername = userService.existsByUsername(staffCreReqDTO.getUsername());
+
+        if (existsByUsername) {
+            throw new EmailExistsException("Tài khoản đã tồn tại");
+        }
+        Optional<Role> roleOptional  = roleService.findById(staffCreReqDTO.getRoleId());
+        if(!roleOptional.isPresent()){
+            throw new DataInputException("Role này Không tồn tại vui lòng xem lại");
         }
         Staff staff = staffService.create(staffCreReqDTO);
         StaffDTO staffCreReqDTO1 = staff.toStaffDTO();
